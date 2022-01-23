@@ -43,5 +43,13 @@ void findGroups(List* groupList, xmlNode* currNode);
 //the main SVG group list
 void addGroupToList(List* groupList, xmlNode* currNode);
 
+//GetList master delete function
+void masterDelete(void* data);
 //GetRects Helper function - recursively digs through group lists and insertBack()'s them into the greater list
 void digForRects(List* masterList, void* singleGroup);
+//GetCircles Helper function - similar to digForRects
+void digForCircles(List* masterList, void* singleGroup);
+//getPaths helper - similar to other dig functions
+void digForPaths(List* masterList, void* singleGroup);
+//getGroups helper - similar to other dig functions
+void digForGroups(List* masterList, void* singleGroup);

@@ -278,11 +278,14 @@ int compareGroups(const void *first, const void *second){
 
     return result;
 }
+
+//Get Functionality
+//Get Rects
 List* getRects(const SVG* img){
     if (img == NULL){
         return NULL;
     }
-    List* returnedList = initializeList(rectangleToString, deleteRectangle, compareRectangles);
+    List* returnedList = initializeList(rectangleToString, masterDelete, compareRectangles);
     ListIterator i = createIterator(img->groups);
     void* element;
 
@@ -297,5 +300,69 @@ List* getRects(const SVG* img){
         insertBack(returnedList, element);
     }
 
+    return returnedList;
+}
+
+//getCircles
+List* getCircles(const SVG* img){
+    if (img == NULL){
+        return NULL;
+    }
+    List* returnedList = initializeList(circleToString, masterDelete, compareCircles);
+    ListIterator i = createIterator(img->groups);
+    void* element;
+
+    //Check each group in img->groups for all Cicles(recursively because groups can contain groups)
+    while((element = nextElement(&i))!= NULL){
+        digForCircles(returnedList, element);
+    }
+    
+    //Check SVG Circles
+    i = createIterator(img->circles);
+    while ((element = nextElement(&i))!= NULL){
+        insertBack(returnedList, element);
+    }
+
+    return returnedList;
+}
+
+//getPaths
+List* getPaths(const SVG* img){
+    if (img == NULL){
+        return NULL;
+    }
+    List* returnedList = initializeList(pathToString, masterDelete, comparePaths);
+    ListIterator i = createIterator(img->groups);
+    void* element;
+
+    while((element = nextElement(&i))!= NULL){
+        digForPaths(returnedList, element);
+    }
+
+    i = createIterator(img->paths);
+    while((element = nextElement(&i))!= NULL){
+        insertBack(returnedList, element);
+    }
+    
+    return returnedList;
+}
+//getGroups
+List* getGroups(const SVG* img){
+    if (img == NULL){
+        return NULL;
+    }
+    List* returnedList = initializeList(groupToString, masterDelete, compareGroups);
+    ListIterator i = createIterator(img->groups);
+    void* element;
+
+    while((element = nextElement(&i))!= NULL){  //grab nested groups first
+        digForGroups(returnedList, element);
+    }
+
+    i = createIterator(img->groups);            //grab svg groups next
+    while((element = nextElement(&i))!= NULL){
+        insertBack(returnedList, element);
+    }
+    
     return returnedList;
 }
