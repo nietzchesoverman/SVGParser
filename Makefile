@@ -16,11 +16,10 @@ ifeq ($(UNAME), Darwin)
 	XML_PATH = /System/Volumes/Data/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/libxml2
 endif
 
-parserTest: $(PARSER_OBJ_FILES) $(BIN)LinkedListAPI.o $(BIN)main.o
-	gcc -shared -o $(BIN)parserTest $(PARSER_OBJ_FILES) $(BIN)LinkedListAPI.o $(BIN)main.o -lxml2 -lm
+parser: $(BIN)libsvgparser.so
 
-$(BIN)main.o: $(SRC)main.c $(INC)SVGParser.h
-	$(CC) $(CFLAGS) -I$(XML_PATH) -I$(INC) -c  $(SRC)main.c -o $(BIN)main.o -lxml2 
+$(BIN)libsvgparser.so: $(PARSER_OBJ_FILES) $(BIN)LinkedListAPI.o
+	gcc -shared -o $(BIN)libsvgparser.so $(PARSER_OBJ_FILES) $(BIN)LinkedListAPI.o -lxml2 -lm
 
 #Compiles all files named SVG*.c in src/ into object files, places all corresponding SVG*.o files in bin/
 $(BIN)SVG%.o: $(SRC)SVG%.c $(INC)LinkedListAPI.h $(INC)SVG*.h
@@ -33,6 +32,19 @@ $(BIN)LinkedListAPI.o: $(SRC)LinkedListAPI.c $(INC)LinkedListAPI.h
 	$(CC) $(CFLAGS) -c -fpic -I$(INC) $(SRC)LinkedListAPI.c -o $(BIN)LinkedListAPI.o
 
 clean:
-	rm -rf $(BIN)StructListDemo $(BIN)xmlExample $(BIN)*.o $(BIN)*.so $(BIN)parserTest
+	rm -rf $(BIN)StructListDemo $(BIN)xmlExample $(BIN)*.o $(BIN)*.so
 
-#gcc -I/usr/include/libxml2 -g SVGParser.c SVGHelpers.c LinkedListAPI.c main.c -lxml2
+#This is the target for the in-class XML example
+xmlExample: $(SRC)libXmlExample.c
+	$(CC) $(CFLAGS) -I$(XML_PATH) $(SRC)libXmlExample.c -lxml2 -o $(BIN)xmlExample
+
+#These are sample targets for the list demo code included in the class examples.  They will not be used
+#for A1, but they can help you figure out who to set up a target for your own test main
+
+StructListDemo: $(BIN)StructListDemo.o $(BIN)liblist.so
+	$(CC) $(CFLAGS) $(LDFLAGS) -L$(BIN) -o $(BIN)StructListDemo $(BIN)StructListDemo.o  -llist
+	
+$(BIN)StructListDemo.o: $(SRC)StructListDemo.c
+	$(CC) $(CFLAGS) -I$(INC) -c $(SRC)StructListDemo.c -o $(BIN)StructListDemo.o
+
+###################################################################################################
