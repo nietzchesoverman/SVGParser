@@ -433,11 +433,56 @@ int numGroupsWithLen(const SVG* img, int len){
     ListIterator i = createIterator(allGroups);
     Group* groupElement;
 
-    while ((groupElement = nextElement(&i))!= NULL){
+    while ((groupElement = (Group*)nextElement(&i))!= NULL){
         if ((getLength(groupElement->circles) + getLength(groupElement->rectangles) + getLength(groupElement->paths) + getLength(groupElement->groups)) == len){
             matches++;
         }
     }
     freeList(allGroups);
     return matches;
+}
+//Num attrs
+int numAttr(const SVG* img){
+    int nums = 0;
+    if (img == NULL){
+        return nums;
+    }
+    nums += getLength(img->otherAttributes);
+    List* allGroups = getGroups(img);
+    ListIterator i = createIterator(allGroups);
+    Group* groupElement;
+
+    while((groupElement = (Group*)nextElement(&i))!= NULL){
+        nums += getLength(groupElement->otherAttributes);
+    }
+    freeList(allGroups);
+
+    List* allRects = getRects(img);
+    i = createIterator(allRects);
+    Rectangle* rectElement;
+
+    while((rectElement = (Rectangle*)nextElement(&i))!= NULL){
+        nums += getLength(rectElement->otherAttributes);
+    }
+    freeList(allRects);
+
+    List* allCirc = getCircles(img);
+    i = createIterator(allCirc);
+    Circle* CircElement;
+
+    while((CircElement = (Circle*)nextElement(&i))!= NULL){
+        nums += getLength(CircElement->otherAttributes);
+    }
+    freeList(allCirc);
+
+    List* allPaths = getPaths(img);
+    i = createIterator(allPaths);
+    Path* pathElement;
+
+    while((pathElement = (Path*)nextElement(&i))!= NULL){
+        nums += getLength(pathElement->otherAttributes);
+    }
+    freeList(allPaths);
+
+    return nums;
 }
