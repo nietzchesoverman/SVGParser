@@ -8,4 +8,14 @@
 test1*
 test2*
 mem*
+.vscode
+main.c
+Emoji_poo.svg
+quad01.svg
+rect_with_units.svg
+rect.svg
+src/libXmlExample.c
+src/StructListDemo.c
+tester
+
 

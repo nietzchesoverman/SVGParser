@@ -53,7 +53,7 @@ void addRectangleToList(List* rectangleList, xmlNode* rootNode, char* (*attrPrin
 int (*attrCompareFunction)(const void* first,const void* second)){
     xmlNode* curr;
 
-    for (curr = rootNode; curr; curr = curr->next){
+    for (curr = rootNode->children; curr; curr = curr->next){
         if (!strcmp((char*)curr->name, "rect")){
             Rectangle* newRectangle = malloc(sizeof(Rectangle));
             char*x = (char*)xmlGetProp(curr, (const xmlChar*)"x");
@@ -80,7 +80,6 @@ int (*attrCompareFunction)(const void* first,const void* second)){
             newRectangle->otherAttributes = extractRectAttributes(curr, attrPrintFunction, attrDeleteFunction, attrCompareFunction);
             insertBack(rectangleList, (void*)newRectangle);
         }
-        addRectangleToList(rectangleList, curr->children, attrPrintFunction, attrDeleteFunction, attrCompareFunction);
     }
 }
 List* extractRectAttributes(xmlNode* currNode, char* (*attrPrintFunction)(void* toBePrinted),void (*attrDeleteFunction)(void* toBeDeleted),int (*attrCompareFunction)(const void* first,const void* second)){
@@ -116,7 +115,7 @@ char* (*printFunction)(void* toBePrinted),void (*deleteFunction)(void* toBeDelet
 void addCircleToList(List* circleList, xmlNode* rootNode, char* (*attrPrintFunction)(void* toBePrinted),void (*attrDeleteFunction)(void* toBeDeleted),int (*attrCompareFunction)(const void* first,const void* second)){
     xmlNode* curr;
 
-    for (curr = rootNode; curr; curr = curr->next){
+    for (curr = rootNode->children; curr; curr = curr->next){
         if(!strcmp((char*)curr->name, "circle")){
             Circle* newCirc = malloc(sizeof(Circle));
             char*cx = (char*)xmlGetProp(curr, (const xmlChar*)"cx");
@@ -140,7 +139,6 @@ void addCircleToList(List* circleList, xmlNode* rootNode, char* (*attrPrintFunct
             newCirc->otherAttributes = extractCircAttributes(curr, attrPrintFunction, attrDeleteFunction, attrCompareFunction);
             insertBack(circleList, (void*)newCirc);
         }
-        addCircleToList(circleList, curr->children, attrPrintFunction, attrDeleteFunction, attrCompareFunction);
     }
 }
 List* extractCircAttributes(xmlNode* currNode, char* (*attrPrintFunction)(void* toBePrinted),void (*attrDeleteFunction)(void* toBeDeleted),int (*attrCompareFunction)(const void* first,const void* second)){
@@ -174,7 +172,7 @@ List* extractPaths(xmlNode* currNode){
 void addPathToList(List* pathlist, xmlNode* rootNode){
     xmlNode* curr;
 
-    for (curr = rootNode; curr; curr = curr->next){
+    for (curr = rootNode->children; curr; curr = curr->next){
         if (!strcmp((char*)curr->name, "path")){
             char* pathData = (char*)xmlGetProp(curr, (const xmlChar*)"d");
             Path* newPathNode = malloc(sizeof(Path) + strlen(pathData) + 1);
@@ -183,7 +181,6 @@ void addPathToList(List* pathlist, xmlNode* rootNode){
             newPathNode->otherAttributes = extractPathAttributes(curr);
             insertBack(pathlist, (void*)newPathNode);
         }
-        addPathToList(pathlist, curr->children);
     }
 }
 List* extractPathAttributes(xmlNode* currNode){
@@ -225,11 +222,29 @@ void findGroups(List* groupList, xmlNode* currNode){        //recursively finds 
 }
 void addGroupToList(List* groupList, xmlNode* currNode){       //processes only this group's scope by using currNode as root for above extract functions 
     Group* newGroup = malloc(sizeof(Group));
-    newGroup->rectangles = extractRectangles(currNode->children, attributeToString, deleteAttribute, compareAttributes, rectangleToString, deleteRectangle, compareRectangles);
-    newGroup->circles = extractCircles(currNode->children, attributeToString, deleteAttribute, compareAttributes, circleToString, deleteCircle, compareCircles);
-    newGroup->paths = extractPaths(currNode->children);
+    newGroup->rectangles = extractRectangles(currNode, attributeToString, deleteAttribute, compareAttributes, rectangleToString, deleteRectangle, compareRectangles);
+    newGroup->circles = extractCircles(currNode, attributeToString, deleteAttribute, compareAttributes, circleToString, deleteCircle, compareCircles);
+    newGroup->paths = extractPaths(currNode);
     newGroup->groups = extractGroups(currNode->children);
     newGroup->otherAttributes = extractAttributes(currNode, attributeToString, deleteAttribute, compareAttributes);
 
     insertBack(groupList, (void*)newGroup);
+}
+
+//--get Functionality--
+//getRects
+void digForRects(List* masterList, void* singleGroup){
+    Group* groupElement = (Group*)singleGroup;
+    if (groupElement->rectangles == NULL){
+        return;
+    }
+    List* rectElement = groupElement->rectangles;
+    ListIterator i = createIterator(rectElement);      //rectangle iterator
+
+    void* element;
+    while ((element = nextElement(&i))!= NULL){                     //insert all primitives to the back of our rectangle masterlist
+        insertBack(masterList, element);
+    }
+
+    digForRects(masterList, (void*)groupElement->groups);                  //recursive step through the buried groups
 }

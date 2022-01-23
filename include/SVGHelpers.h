@@ -42,3 +42,6 @@ void findGroups(List* groupList, xmlNode* currNode);
 //Extracts all group sub-lists (rects, attributes,etc.) and ATTRIBUTES(since we dont have group-specific attrs) into a group element thats added onto 
 //the main SVG group list
 void addGroupToList(List* groupList, xmlNode* currNode);
+
+//GetRects Helper function - recursively digs through group lists and insertBack()'s them into the greater list
+void digForRects(List* masterList, void* singleGroup);

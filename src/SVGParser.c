@@ -278,3 +278,24 @@ int compareGroups(const void *first, const void *second){
 
     return result;
 }
+List* getRects(const SVG* img){
+    if (img == NULL){
+        return NULL;
+    }
+    List* returnedList = initializeList(rectangleToString, deleteRectangle, compareRectangles);
+    ListIterator i = createIterator(img->groups);
+    void* element;
+
+    //Check each group in img->groups for all rectangles(recursively because groups can contain groups)
+    while((element = nextElement(&i))!= NULL){
+        digForRects(returnedList, element);
+    }
+    
+    //Check SVG rectangles
+    i = createIterator(img->rectangles);
+    while ((element = nextElement(&i))!= NULL){
+        insertBack(returnedList, element);
+    }
+
+    return returnedList;
+}
