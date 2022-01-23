@@ -366,3 +366,78 @@ List* getGroups(const SVG* img){
     
     return returnedList;
 }
+
+//Summaries
+//Num Rects with area
+int numRectsWithArea(const SVG* img, float area){
+    int matches = 0;
+    if (img == NULL ||area < 0){
+        return matches;
+    }
+    List* allRects = getRects(img);
+    ListIterator i = createIterator(allRects);      //grab list of circles
+    Rectangle* rectElement;
+    
+
+    while((rectElement = (Rectangle*)nextElement(&i)) != NULL){
+        if (ceil(rectElement->height * rectElement->width) == area){        //iterate through and perform comparison
+            matches++;
+        }
+    }
+    freeList(allRects);     //free pointer list afterwards
+    return matches;
+}
+//Num Circles with area
+int numCirclesWithArea(const SVG* img, float area){
+    int matches = 0;
+    if (img == NULL || area < 0){
+        return matches;
+    }
+    List* allCicles = getCircles(img);
+    ListIterator i = createIterator(allCicles);
+    Circle* circElement;
+
+    while((circElement = (Circle*)nextElement(&i)) != NULL){
+        if (ceil(3.1415926536 * pow(circElement->r, 2)) == area){
+            matches++;
+        }
+    }
+    freeList(allCicles);
+    return matches;
+}
+//Num Paths with Data
+int numPathsWithdata(const SVG* img, const char* data){
+    int matches = 0;
+    if(img == NULL || !strcmp(data, "") || data == NULL){
+        return matches;
+    }
+    List* allPaths = getPaths(img);
+    ListIterator i = createIterator(allPaths);
+    Path* pathElement;
+
+    while((pathElement = (Path*)nextElement(&i)) != NULL){
+        if (!strcmp(pathElement->data, data)){
+            matches++;
+        }
+    }
+    freeList(allPaths);
+    return matches;
+}
+//Num Groups with len
+int numGroupsWithLen(const SVG* img, int len){
+    int matches = 0;
+    if (img == NULL|| len <= 0){
+        return matches;
+    }
+    List* allGroups = getGroups(img);
+    ListIterator i = createIterator(allGroups);
+    Group* groupElement;
+
+    while ((groupElement = nextElement(&i))!= NULL){
+        if ((getLength(groupElement->circles) + getLength(groupElement->rectangles) + getLength(groupElement->paths) + getLength(groupElement->groups)) == len){
+            matches++;
+        }
+    }
+    freeList(allGroups);
+    return matches;
+}
