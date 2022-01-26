@@ -1,6 +1,13 @@
 #include "SVGParser.h"
 #include "SVGHelpers.h"
+/*
+All work completed by Yousif Jamal, yjamal/1160861 for CIS2750 Assignment 1
 
+Used looping in tree1.c that printed out each node to loop through nodes and extract their info recursively in a depth-first way
+http://www.xmlsoft.org/examples/tree1.c
+
+Utilized libXML example to extract attributes 
+https://moodle.socs.uoguelph.ca/pluginfile.php/60421/mod_resource/content/0/libXmlExample.c*/
 
 SVG* createSVG(const char* fileName){
     xmlDoc* newFile = NULL;
@@ -82,7 +89,7 @@ void deleteSVG(SVG* img){
 
 //~~~HELPERS FOR LIST API~~~
 //Attributes
-int compareAttributes(const void *first, const void *second){       //change to actually compare attributes
+int compareAttributes(const void *first, const void *second){       
     Attribute* firstAttr = (Attribute*)first;
     Attribute* secondAttr = (Attribute*)second;
 
@@ -90,7 +97,7 @@ int compareAttributes(const void *first, const void *second){       //change to 
 
 }
 
-void deleteAttribute( void* data){                                  //change to actually list delete aswell
+void deleteAttribute( void* data){                                  
     Attribute* deletedNode;
 
     deletedNode = (Attribute*)(data);

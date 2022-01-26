@@ -3,6 +3,14 @@
 #include <stdlib.h>
 #include <math.h>
 #include "SVGParser.h"
+/*
+All work completed by Yousif Jamal, yjamal/1160861 for CIS2750 Assignment 1
+
+Used looping in tree1.c that printed out each node to loop through nodes and extract their info recursively in a depth-first way
+http://www.xmlsoft.org/examples/tree1.c
+
+Utilized libXML example to extract attributes 
+https://moodle.socs.uoguelph.ca/pluginfile.php/60421/mod_resource/content/0/libXmlExample.c*/
 
 
 
