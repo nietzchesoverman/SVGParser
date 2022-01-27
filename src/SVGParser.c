@@ -77,6 +77,9 @@ char* SVGToString(const SVG* img){
 }
 
 void deleteSVG(SVG* img){
+    if(img == NULL){
+        return;
+    }
     freeList(img->groups);
     freeList(img->paths);
     freeList(img->circles);
@@ -387,7 +390,7 @@ int numRectsWithArea(const SVG* img, float area){
     
 
     while((rectElement = (Rectangle*)nextElement(&i)) != NULL){
-        if (ceil(rectElement->height * rectElement->width) == area){        //iterate through and perform comparison
+        if (ceil(rectElement->height * rectElement->width) == ceil(area)){        //iterate through and perform comparison
             matches++;
         }
     }
@@ -405,7 +408,7 @@ int numCirclesWithArea(const SVG* img, float area){
     Circle* circElement;
 
     while((circElement = (Circle*)nextElement(&i)) != NULL){
-        if (ceil(3.1415926536 * pow(circElement->r, 2)) == area){
+        if (ceil(3.1415926536 * pow(circElement->r, 2)) == ceil(area)){
             matches++;
         }
     }
