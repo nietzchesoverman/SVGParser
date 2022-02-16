@@ -292,10 +292,10 @@ int compareGroups(const void *first, const void *second){
 //Get Functionality
 //Get Rects
 List* getRects(const SVG* img){
-    if (img == NULL){
-        return NULL;
-    }
     List* returnedList = initializeList(rectangleToString, masterDelete, compareRectangles);
+    if (img == NULL){
+        return returnedList;
+    }
     ListIterator i = createIterator(img->groups);
     void* element;
 
@@ -315,10 +315,10 @@ List* getRects(const SVG* img){
 
 //getCircles
 List* getCircles(const SVG* img){
-    if (img == NULL){
-        return NULL;
-    }
     List* returnedList = initializeList(circleToString, masterDelete, compareCircles);
+    if (img == NULL){
+        return returnedList;
+    }
     ListIterator i = createIterator(img->groups);
     void* element;
 
@@ -338,10 +338,10 @@ List* getCircles(const SVG* img){
 
 //getPaths
 List* getPaths(const SVG* img){
-    if (img == NULL){
-        return NULL;
-    }
     List* returnedList = initializeList(pathToString, masterDelete, comparePaths);
+    if (img == NULL){
+        return returnedList;
+    }
     ListIterator i = createIterator(img->groups);
     void* element;
 
@@ -358,10 +358,10 @@ List* getPaths(const SVG* img){
 }
 //getGroups
 List* getGroups(const SVG* img){
-    if (img == NULL){
-        return NULL;
-    }
     List* returnedList = initializeList(groupToString, masterDelete, compareGroups);
+    if (img == NULL){
+        return returnedList;
+    }
     ListIterator i = createIterator(img->groups);
     void* element;
 

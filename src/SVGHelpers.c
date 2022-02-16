@@ -213,11 +213,11 @@ List* extractGroups(xmlNode* rootNode){
 void findGroups(List* groupList, xmlNode* currNode){        //recursively finds group elements
     xmlNode* curr;
 
-    for (curr = currNode; curr; curr = curr->next){
+    for (curr = currNode->children; curr; curr = curr->next){
         if (!strcmp((char*)curr->name, "g")){
             addGroupToList(groupList, curr);
         }
-        findGroups(groupList, curr->children);
+        findGroups(groupList, curr);
     }
 }
 void addGroupToList(List* groupList, xmlNode* currNode){       //processes only this group's scope by using currNode as root for above extract functions 
@@ -238,7 +238,7 @@ void masterDelete(void* data){
 //getRects
 void digForRects(List* masterList, void* singleGroup){
     Group* groupElement = (Group*)singleGroup;
-    if (groupElement->rectangles == NULL){
+    if (getLength(groupElement->rectangles) < 1){
         return;
     }
     List* rectElement = groupElement->rectangles;
@@ -255,7 +255,7 @@ void digForRects(List* masterList, void* singleGroup){
 //getCircles
 void digForCircles(List* masterList, void* singleGroup){
     Group* groupElement = (Group*)singleGroup;
-    if (groupElement->circles == NULL){
+    if (getLength(groupElement->circles) < 1){
         return;
     }
     List* circElement = groupElement->circles;
@@ -273,7 +273,7 @@ void digForCircles(List* masterList, void* singleGroup){
 //getPaths
 void digForPaths(List* masterList, void* singleGroup){
     Group* groupElement = (Group*)singleGroup;
-    if (groupElement->paths == NULL){
+    if (getLength(groupElement->paths) < 1){
         return;
     }
     List* pathElement = groupElement->paths;
@@ -289,7 +289,7 @@ void digForPaths(List* masterList, void* singleGroup){
 }
 void digForGroups(List* masterList, void* singleGroup){
     Group* groupElement = (Group*)singleGroup;
-    if (groupElement->groups == NULL){
+    if (getLength(groupElement->groups) < 1){
         return;
     }
     List* subGroupElement = groupElement->groups;
