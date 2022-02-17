@@ -496,3 +496,58 @@ int numAttr(const SVG* img){
 
     return nums;
 }
+SVG* createValidSVG(const char* fileName, const char* schemaFile){
+    xmlDoc* newFile = NULL;
+    xmlSchema* newSchema = NULL;
+    xmlSchemaParserCtxt* ctxt = NULL;
+    xmlSchemaValidCtxt* ctxt2 = NULL;
+    xmlNode* rootElement = NULL;
+    SVG* newSVG;
+    int valid;
+
+    xmlLineNumbersDefault(1);
+
+    if (strcmp(schemaFile, "") == 0 || strcmp(fileName, "") == 0){  //check if the files have names
+        return NULL;
+    }
+    //Create Schema File
+    ctxt = xmlSchemaNewParserCtxt(schemaFile);      //ensure schema is valid
+    xmlSchemaSetParserErrors(ctxt, (xmlSchemaValidityErrorFunc)fprintf, (xmlSchemaValidityWarningFunc)fprintf, stderr);
+    newSchema = xmlSchemaParse(ctxt);
+    xmlSchemaFreeParserCtxt(ctxt);
+
+
+    newFile = xmlReadFile(fileName, NULL, 0);
+    if (newSchema == NULL||newFile == NULL){       //check if the reads happened properly
+        return NULL;
+    }
+
+    ctxt2 = xmlSchemaNewValidCtxt(newSchema);       //ensure document is valid for the schema
+    xmlSchemaSetValidErrors(ctxt2, (xmlSchemaValidityErrorFunc)fprintf, (xmlSchemaValidityWarningFunc)fprintf, stderr);
+    valid = xmlSchemaValidateDoc(ctxt2, newFile);
+    if (valid != 0){
+        return NULL;
+    }
+    xmlSchemaFreeValidCtxt(ctxt2);
+    xmlSchemaFree(newSchema);
+    xmlSchemaCleanupTypes();
+    
+    //Now that we're valid, process the SVG
+
+    rootElement = xmlDocGetRootElement(newFile);            //Grab the root element of the XML doc
+
+    newSVG = malloc(sizeof(SVG));                       //allocate memory for SVG struct
+
+    extractMetaInfo(newSVG, rootElement);
+    newSVG->otherAttributes = extractAttributes(rootElement, attributeToString, deleteAttribute, compareAttributes);
+    newSVG->rectangles = extractRectangles(rootElement, attributeToString, deleteAttribute, compareAttributes, rectangleToString, deleteRectangle, compareRectangles);                                        
+    newSVG->circles = extractCircles(rootElement, attributeToString, deleteAttribute, compareAttributes, circleToString, deleteCircle, compareCircles);
+    newSVG->paths = extractPaths(rootElement);
+    newSVG->groups = extractGroups(rootElement);
+
+
+    xmlFreeDoc(newFile);
+    xmlCleanupParser();
+
+    return newSVG;
+}
