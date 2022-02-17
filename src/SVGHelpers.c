@@ -304,3 +304,40 @@ void digForGroups(List* masterList, void* singleGroup){
         }
     }
 }
+
+int validateTree(xmlDoc* document, const char* schemaFile){
+    xmlSchema* newSchema = NULL;
+    xmlSchemaParserCtxt* ctxt = NULL;
+    xmlSchemaValidCtxt* ctxt2 = NULL;
+    int valid;
+
+    xmlLineNumbersDefault(1);
+
+    if (strcmp(schemaFile, "") == 0){  //check if the files have names
+        return -1;
+    }
+    //Create Schema File
+    ctxt = xmlSchemaNewParserCtxt(schemaFile);      //ensure schema is valid
+    xmlSchemaSetParserErrors(ctxt, (xmlSchemaValidityErrorFunc)fprintf, (xmlSchemaValidityWarningFunc)fprintf, stderr);
+    newSchema = xmlSchemaParse(ctxt);
+    if (newSchema == NULL){       //check if the reads happened properly
+        xmlSchemaFreeParserCtxt(ctxt);
+        return -1;
+    }
+    xmlSchemaFreeParserCtxt(ctxt);
+    
+
+    ctxt2 = xmlSchemaNewValidCtxt(newSchema);       //ensure document is valid for the schema
+    xmlSchemaSetValidErrors(ctxt2, (xmlSchemaValidityErrorFunc)fprintf, (xmlSchemaValidityWarningFunc)fprintf, stderr);
+    valid = xmlSchemaValidateDoc(ctxt2, document);
+    if (valid != 0){
+        xmlSchemaFreeValidCtxt(ctxt2);
+        xmlSchemaFree(newSchema);
+        xmlSchemaCleanupTypes();
+        return -1;
+    }
+    xmlSchemaFreeValidCtxt(ctxt2);
+    xmlSchemaFree(newSchema);
+    xmlSchemaCleanupTypes();
+    return valid;
+}

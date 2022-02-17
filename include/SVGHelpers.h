@@ -62,3 +62,7 @@ void digForCircles(List* masterList, void* singleGroup);
 void digForPaths(List* masterList, void* singleGroup);
 //getGroups helper - similar to other dig functions
 void digForGroups(List* masterList, void* singleGroup);
+
+/*ASSIGNMENT 2*/
+//validates an xmlDocument against a schema file
+int validateTree(xmlDoc* document, const char* schemaFile);
