@@ -78,3 +78,6 @@ int validateTree(xmlDoc* document, const char* schemaFile);
 
 //Turns an SVG into an xmlDoc
 xmlDoc* svgToXML(const SVG* img);
+//helpers to get attributes,rects,circles and paths
+void attrToXML(xmlNode* parentNode, List* elementList);
+void rectToXML(xmlNode* parentNode, List* elementList);

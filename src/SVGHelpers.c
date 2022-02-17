@@ -362,8 +362,6 @@ xmlDoc* svgToXML(const SVG* img){
     xmlNode* rootNode = NULL;
     xmlNs* nameSpace = NULL;
     List* elementList = NULL;
-    ListIterator i;
-    void* element;
 
     //create root element and set the namespace
     newDoc = xmlNewDoc((xmlChar*)"1.0");
@@ -374,11 +372,7 @@ xmlDoc* svgToXML(const SVG* img){
     
     //get other attributes of root svg element
     elementList = img->otherAttributes;
-    i = createIterator(elementList);
-    while ((element = nextElement(&i))!= NULL){
-        Attribute* newAttr = (Attribute*)element;
-        xmlNewProp(rootNode, (const xmlChar*)newAttr->name,(const xmlChar*)newAttr->value);
-    }
+    attrToXML(rootNode, elementList);
 
     //set title and description, if they exist.
     if (strcmp(img->title, "") != 0){      
@@ -388,7 +382,37 @@ xmlDoc* svgToXML(const SVG* img){
         xmlNewChild(rootNode, NULL, (const xmlChar*)"desc", (const xmlChar*)img->description);
     }
 
-    
+    //set rectangles,circles,paths
+    elementList = img->rectangles;
+    rectToXML(rootNode, elementList);
 
     return newDoc;
+}
+void attrToXML(xmlNode* parentNode, List* elementList){
+    ListIterator i = createIterator(elementList);
+    void* element;
+    while ((element = nextElement(&i))!= NULL){
+        Attribute* newAttr = (Attribute*)element;
+        xmlNewProp(parentNode, (const xmlChar*)newAttr->name,(const xmlChar*)newAttr->value);
+    }
+}
+void rectToXML(xmlNode* parentNode, List* elementList){
+    ListIterator i = createIterator(elementList);
+    char ftoA[82];
+    void* element;
+    while ((element = nextElement(&i))!= NULL){         //for each rectangle
+        Rectangle* rectElement = (Rectangle*)element;
+        xmlNode* newRect = xmlNewChild(parentNode, NULL, (const xmlChar*)"rect", NULL);
+        sprintf(ftoA, "%f%s", rectElement->x, rectElement->units);
+        xmlNewProp(newRect, (const xmlChar*)"x", (const xmlChar*)ftoA);
+        sprintf(ftoA, "%f%s", rectElement->y, rectElement->units);
+        xmlNewProp(newRect, (const xmlChar*)"y", (const xmlChar*)ftoA);
+        sprintf(ftoA, "%f%s", rectElement->width, rectElement->units);
+        xmlNewProp(newRect, (const xmlChar*)"width", (const xmlChar*)ftoA);
+        sprintf(ftoA, "%f%s", rectElement->height, rectElement->units);
+        xmlNewProp(newRect, (const xmlChar*)"height", (const xmlChar*)ftoA);
+        attrToXML(newRect, rectElement->otherAttributes);
+    }
+    
+    
 }
