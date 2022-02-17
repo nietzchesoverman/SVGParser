@@ -81,3 +81,6 @@ xmlDoc* svgToXML(const SVG* img);
 //helpers to get attributes,rects,circles and paths
 void attrToXML(xmlNode* parentNode, List* elementList);
 void rectToXML(xmlNode* parentNode, List* elementList);
+void circToXML(xmlNode* parentNode, List* elementList);
+void pathToXML(xmlNode* parentNode, List* elementList);
+void groupToXML(xmlNode* parentNode, List* elementList);

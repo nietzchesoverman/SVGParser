@@ -232,7 +232,7 @@ void findGroups(List* groupList, xmlNode* currNode){        //recursively finds 
         if (!strcmp((char*)curr->name, "g")){
             addGroupToList(groupList, curr);
         }
-        findGroups(groupList, curr);
+        //findGroups(groupList, curr);
     }
 }
 void addGroupToList(List* groupList, xmlNode* currNode){       //processes only this group's scope by using currNode as root for above extract functions 
@@ -240,7 +240,7 @@ void addGroupToList(List* groupList, xmlNode* currNode){       //processes only 
     newGroup->rectangles = extractRectangles(currNode, attributeToString, deleteAttribute, compareAttributes, rectangleToString, deleteRectangle, compareRectangles);
     newGroup->circles = extractCircles(currNode, attributeToString, deleteAttribute, compareAttributes, circleToString, deleteCircle, compareCircles);
     newGroup->paths = extractPaths(currNode);
-    newGroup->groups = extractGroups(currNode->children);
+    newGroup->groups = extractGroups(currNode);
     newGroup->otherAttributes = extractAttributes(currNode, attributeToString, deleteAttribute, compareAttributes);
 
     insertBack(groupList, (void*)newGroup);
@@ -385,6 +385,14 @@ xmlDoc* svgToXML(const SVG* img){
     //set rectangles,circles,paths
     elementList = img->rectangles;
     rectToXML(rootNode, elementList);
+    elementList = img->circles;
+    circToXML(rootNode, elementList);
+    elementList = img->paths;
+    pathToXML(rootNode, elementList);
+    elementList = img->groups;
+    groupToXML(rootNode, elementList);
+
+
 
     return newDoc;
 }
@@ -415,4 +423,43 @@ void rectToXML(xmlNode* parentNode, List* elementList){
     }
     
     
+}
+void circToXML(xmlNode* parentNode, List* elementList){
+    ListIterator i = createIterator(elementList);
+    char ftoA[82];
+    void* element;
+    while ((element = nextElement(&i))!= NULL){
+        Circle* circElement = (Circle*)element;
+        xmlNode* newCirc = xmlNewChild(parentNode, NULL, (const xmlChar*)"circle", NULL);
+        sprintf(ftoA, "%f%s", circElement->cx, circElement->units);
+        xmlNewProp(newCirc, (const xmlChar*)"cx", (const xmlChar*)ftoA);
+        sprintf(ftoA, "%f%s", circElement->cy, circElement->units);
+        xmlNewProp(newCirc, (const xmlChar*)"cy", (const xmlChar*)ftoA);
+        sprintf(ftoA, "%f%s", circElement->r, circElement->units);
+        xmlNewProp(newCirc, (const xmlChar*)"r", (const xmlChar*)ftoA);
+        attrToXML(newCirc, circElement->otherAttributes);
+    }
+}
+void pathToXML(xmlNode* parentNode, List* elementList){
+    ListIterator i = createIterator(elementList);
+    void* element;
+    while ((element = nextElement(&i))!= NULL){
+        Path* pathElement = (Path*)element;
+        xmlNode* newPath = xmlNewChild(parentNode, NULL, (const xmlChar*)"path", NULL);
+        xmlNewProp(newPath, (const xmlChar*)"d", (const xmlChar*)pathElement->data);
+        attrToXML(newPath, pathElement->otherAttributes);
+    }
+}
+void groupToXML(xmlNode* parentNode, List* elementList){
+    ListIterator i = createIterator(elementList);
+    void* element;
+    while ((element = nextElement(&i))!=NULL){
+        Group* grpElement = (Group*)element;
+        xmlNode* newGrp = xmlNewChild(parentNode, NULL, (const xmlChar*)"g", NULL);
+        attrToXML(newGrp, grpElement->otherAttributes);
+        rectToXML(newGrp, grpElement->rectangles);
+        circToXML(newGrp, grpElement->circles);
+        pathToXML(newGrp, grpElement->paths);
+        groupToXML(newGrp, grpElement->groups);
+    }
 }
