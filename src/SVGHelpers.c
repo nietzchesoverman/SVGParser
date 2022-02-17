@@ -1,4 +1,19 @@
 #include "SVGHelpers.h"
+/*
+All work completed by Yousif Jamal, yjamal/1160861 for CIS2750 Assignment 1
+
+Used looping in tree1.c that printed out each node to loop through nodes and extract their info recursively in a depth-first way
+http://www.xmlsoft.org/examples/tree1.c
+
+Utilized libXML example to extract attributes 
+https://moodle.socs.uoguelph.ca/pluginfile.php/60421/mod_resource/content/0/libXmlExample.c
+
+Utilized example to validate xml against xsd
+https://knol2share.blogspot.com/2009/05/validate-xml-against-xsd-in-c.html
+
+Utilized Tree creation & saving from tree2.c
+http://www.xmlsoft.org/examples/tree2.c
+*/
 //SVG element parsing functions
 void extractMetaInfo(SVG* mainElement, xmlNode* rootNode){
     int standardTextSize = 256;
@@ -340,4 +355,40 @@ int validateTree(xmlDoc* document, const char* schemaFile){
     xmlSchemaFree(newSchema);
     xmlSchemaCleanupTypes();
     return valid;
+}
+
+xmlDoc* svgToXML(const SVG* img){
+    xmlDoc* newDoc = NULL;
+    xmlNode* rootNode = NULL;
+    xmlNs* nameSpace = NULL;
+    List* elementList = NULL;
+    ListIterator i;
+    void* element;
+
+    //create root element and set the namespace
+    newDoc = xmlNewDoc((xmlChar*)"1.0");
+    rootNode = xmlNewNode(NULL, (const xmlChar*)"svg");
+    nameSpace = xmlNewNs(rootNode, (const xmlChar*)img->namespace, NULL);
+    xmlSetNs(rootNode, nameSpace);
+    xmlDocSetRootElement(newDoc, rootNode);
+    
+    //get other attributes of root svg element
+    elementList = img->otherAttributes;
+    i = createIterator(elementList);
+    while ((element = nextElement(&i))!= NULL){
+        Attribute* newAttr = (Attribute*)element;
+        xmlNewProp(rootNode, (const xmlChar*)newAttr->name,(const xmlChar*)newAttr->value);
+    }
+
+    //set title and description, if they exist.
+    if (strcmp(img->title, "") != 0){      
+        xmlNewChild(rootNode, NULL, (const xmlChar*)"title", (const xmlChar*)img->title);
+    }
+    if (strcmp(img->description, "") != 0){      
+        xmlNewChild(rootNode, NULL, (const xmlChar*)"desc", (const xmlChar*)img->description);
+    }
+
+    
+
+    return newDoc;
 }

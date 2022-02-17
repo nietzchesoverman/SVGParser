@@ -7,7 +7,14 @@ Used looping in tree1.c that printed out each node to loop through nodes and ext
 http://www.xmlsoft.org/examples/tree1.c
 
 Utilized libXML example to extract attributes 
-https://moodle.socs.uoguelph.ca/pluginfile.php/60421/mod_resource/content/0/libXmlExample.c*/
+https://moodle.socs.uoguelph.ca/pluginfile.php/60421/mod_resource/content/0/libXmlExample.c
+
+Utilized example to validate xml against xsd
+https://knol2share.blogspot.com/2009/05/validate-xml-against-xsd-in-c.html
+
+Utilized Tree creation & saving from tree2.c
+http://www.xmlsoft.org/examples/tree2.c
+*/
 
 SVG* createSVG(const char* fileName){
     xmlDoc* newFile = NULL;
@@ -528,4 +535,19 @@ SVG* createValidSVG(const char* fileName, const char* schemaFile){
     xmlCleanupParser();
 
     return newSVG;
+}
+
+bool writeSVG(const SVG* img, const char* fileName){
+    xmlDoc* newSVGtoXMLDoc = NULL;
+
+    if (strcmp(fileName, "") == 0 || fileName == NULL){
+        return false;
+    }
+
+    newSVGtoXMLDoc = svgToXML(img);
+    xmlSaveFormatFileEnc(fileName, newSVGtoXMLDoc, "UTF-8", 1);
+
+    xmlFreeDoc(newSVGtoXMLDoc);
+    xmlCleanupParser();
+    return true;
 }
