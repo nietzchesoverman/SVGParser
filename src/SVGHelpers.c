@@ -253,9 +253,6 @@ void masterDelete(void* data){
 //getRects
 void digForRects(List* masterList, void* singleGroup){
     Group* groupElement = (Group*)singleGroup;
-    if (getLength(groupElement->rectangles) < 1){
-        return;
-    }
     List* rectElement = groupElement->rectangles;
     ListIterator i = createIterator(rectElement);      //rectangle iterator
 
@@ -263,16 +260,16 @@ void digForRects(List* masterList, void* singleGroup){
     while ((element = nextElement(&i))!= NULL){                     //insert all primitives to the back of our rectangle masterlist
         insertBack(masterList, element);
     }
-    if (getLength(groupElement->groups) > 0){       
-        digForRects(masterList, (void*)groupElement->groups);                  //recursive step through the buried groups if they have nodes
+    if (getLength(groupElement->groups) > 0){   
+        i = createIterator(groupElement->groups); //iter group list and recurse
+        while((element = nextElement(&i))!= NULL){    
+            digForRects(masterList, element);                  //recursive step through the buried groups if they have nodes
+        }
     }
 }
 //getCircles
 void digForCircles(List* masterList, void* singleGroup){
     Group* groupElement = (Group*)singleGroup;
-    if (getLength(groupElement->circles) < 1){
-        return;
-    }
     List* circElement = groupElement->circles;
     ListIterator i = createIterator(circElement);
     void* element;
@@ -281,16 +278,16 @@ void digForCircles(List* masterList, void* singleGroup){
         insertBack(masterList, element);
     }
     if(getLength(groupElement->groups) > 0){
-        digForCircles(masterList, (void*)groupElement->groups);
+        i = createIterator(groupElement->groups); //iter group list and recurse
+        while((element = nextElement(&i))!= NULL){    
+            digForCircles(masterList, element);                  //recursive step through the buried groups if they have nodes
+        }
     }
     
 }
 //getPaths
 void digForPaths(List* masterList, void* singleGroup){
     Group* groupElement = (Group*)singleGroup;
-    if (getLength(groupElement->paths) < 1){
-        return;
-    }
     List* pathElement = groupElement->paths;
     ListIterator i = createIterator(pathElement);
     void* element;
@@ -299,7 +296,10 @@ void digForPaths(List* masterList, void* singleGroup){
         insertBack(masterList, element);
     }
     if (getLength(groupElement->groups) > 0){
-        digForPaths(masterList, (void*)groupElement->groups);
+        i = createIterator(groupElement->groups); //iter group list and recurse
+        while((element = nextElement(&i))!= NULL){    
+            digForPaths(masterList, element);                  //recursive step through the buried groups if they have nodes
+        }
     }
 }
 void digForGroups(List* masterList, void* singleGroup){
@@ -312,10 +312,12 @@ void digForGroups(List* masterList, void* singleGroup){
     void* element;
 
     while ((element = nextElement(&i))!= NULL){
-        insertBack(masterList, element);
-        Group* deeper = (Group*)element;            //grab that group in the loop and perform recursive check & step here
-        if (getLength(deeper->groups) > 0){
-            digForGroups(masterList, (void*)deeper->groups);
+        insertBack(masterList, element);           //grab that group in the loop and perform recursive check & step here
+    }
+    if (getLength(groupElement->groups) > 0){
+        i = createIterator(groupElement->groups); //iter group list and recurse
+        while((element = nextElement(&i))!= NULL){    
+            digForGroups(masterList, element);                  //recursive step through the buried groups if they have nodes
         }
     }
 }
