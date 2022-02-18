@@ -545,7 +545,9 @@ bool writeSVG(const SVG* img, const char* fileName){
     }
 
     newSVGtoXMLDoc = svgToXML(img);
-    xmlSaveFormatFileEnc(fileName, newSVGtoXMLDoc, "UTF-8", 1);
+    if (xmlSaveFormatFileEnc(fileName, newSVGtoXMLDoc, "UTF-8", 1) == -1){      //error check the write file return value
+        return false;
+    } 
 
     xmlFreeDoc(newSVGtoXMLDoc);
     xmlCleanupParser();
