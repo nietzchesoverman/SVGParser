@@ -503,6 +503,9 @@ int numAttr(const SVG* img){
 
     return nums;
 }
+
+/*A2 Functions*/
+//Mod 1
 SVG* createValidSVG(const char* fileName, const char* schemaFile){
     xmlDoc* newFile = NULL;
     xmlNode* rootElement = NULL;
@@ -510,6 +513,11 @@ SVG* createValidSVG(const char* fileName, const char* schemaFile){
 
     newFile = xmlReadFile(fileName, NULL, 0);
     if (newFile == NULL || strcmp(fileName, "") == 0){       //check if the reads happened properly
+        return NULL;
+    }
+    if (checkExtension(schemaFile, ".xsd") != 0 || checkExtension(fileName, ".svg") != 0){
+        xmlFreeDoc(newFile);
+        xmlCleanupParser();
         return NULL;
     }
     if (validateTree(newFile, schemaFile) != 0){
@@ -552,4 +560,9 @@ bool writeSVG(const SVG* img, const char* fileName){
     xmlFreeDoc(newSVGtoXMLDoc);
     xmlCleanupParser();
     return true;
+}
+bool validateSVG(const SVG* img, const char* schemaFile){
+    if (img == NULL || schemaFile == NULL || strcmp(schemaFile, "") == 0){
+        return false;
+    }
 }

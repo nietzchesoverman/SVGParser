@@ -75,6 +75,7 @@ void digForGroups(List* masterList, void* singleGroup);
 /*ASSIGNMENT 2*/
 //validates an xmlDocument against a schema file
 int validateTree(xmlDoc* document, const char* schemaFile);
+int checkExtension(const char* fileName, char* extension);
 
 //Turns an SVG into an xmlDoc
 xmlDoc* svgToXML(const SVG* img);

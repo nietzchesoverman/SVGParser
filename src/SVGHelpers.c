@@ -465,3 +465,11 @@ void groupToXML(xmlNode* parentNode, List* elementList){
         groupToXML(newGrp, grpElement->groups);
     }
 }
+int checkExtension(const char* fileName, char* extension){
+    char* fileExt = strchr(fileName, '.');
+
+    if (strcmp(extension, fileExt) != 0){
+        return -1;
+    }
+    return 0;
+}
