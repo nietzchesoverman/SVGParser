@@ -17,7 +17,8 @@ http://www.xmlsoft.org/examples/tree2.c
 //SVG element parsing functions
 void extractMetaInfo(SVG* mainElement, xmlNode* rootNode){
     int standardTextSize = 256;
-    //Namespace Extraction                        
+    //Namespace Extraction
+    strcpy(mainElement->namespace, "");                        
     strncpy(mainElement->namespace, (char*)rootNode->ns->href, standardTextSize);  //Truncate and copy only 256
 
     //SVG component Extraction - title, description: initialized then check if optional elements exist and put them into SVG struct
@@ -472,4 +473,68 @@ int checkExtension(const char* fileName, char* extension){
         return -1;
     }
     return 0;
+}
+void validateAttr(List* attrList, int* valid){
+    ListIterator i = createIterator(attrList);
+    void* element;
+    while ((element = nextElement(&i))!=NULL){
+        Attribute* attr = (Attribute*)element;
+        if (attr->name == NULL){
+            (*valid) -= 1;
+            return;
+        }
+    }
+}
+void validateRect(List* rectList, int* valid){
+    ListIterator i = createIterator(rectList);
+    void* element;
+
+    while ((element = nextElement(&i))!=NULL){
+        Rectangle* rect = (Rectangle*)element;
+        validateAttr(rect->otherAttributes, valid);
+        if (rect->width < 0 || rect->height < 0 || rect->otherAttributes == NULL){
+            (*valid) -= -1;
+            return;
+        }
+    }
+}
+void validateCirc(List* circList, int* valid){
+    ListIterator i = createIterator(circList);
+    void* element;
+    while ((element = nextElement(&i))!=NULL){
+        Circle* circ = (Circle*)element;
+        validateAttr(circ->otherAttributes, valid);
+        if (circ->r < 0 || circ->otherAttributes == NULL){
+            (*valid) -= -1;
+            return;
+        }
+    }
+}
+void validatePath(List* pathList, int* valid){
+    ListIterator i = createIterator(pathList);
+    void* element;
+    while ((element = nextElement(&i))!=NULL){
+        Path* path = (Path*)element;
+        validateAttr(path->otherAttributes, valid);
+        if (path->data == NULL || path->otherAttributes == NULL){
+            (*valid) -= 1;
+            return;
+        }
+    }
+}
+void validateGroup(List* groupList, int* valid){
+    ListIterator i = createIterator(groupList);
+    void* element;
+    while ((element = nextElement(&i))!=NULL){
+        Group* grp = (Group*)element;
+        if (grp->rectangles == NULL ||grp->circles == NULL || grp->paths == NULL || grp->groups == NULL || grp->otherAttributes == NULL){
+            (*valid) -= 1;
+            return;
+        }
+        validateAttr(grp->otherAttributes, valid);
+        validateRect(grp->rectangles, valid);
+        validateCirc(grp->circles, valid);
+        validatePath(grp->paths, valid);
+        validateGroup(grp->groups, valid);
+    }
 }

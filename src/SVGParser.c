@@ -562,7 +562,28 @@ bool writeSVG(const SVG* img, const char* fileName){
     return true;
 }
 bool validateSVG(const SVG* img, const char* schemaFile){
-    if (img == NULL || schemaFile == NULL || strcmp(schemaFile, "") == 0){
+    if (img == NULL || schemaFile == NULL || strcmp(schemaFile, "") == 0 || checkExtension(schemaFile, ".xsd") != 0){
         return false;
     }
-}
+    xmlDoc* svgAsXML = svgToXML(img);
+    int valid = 0;
+    if (validateTree(svgAsXML, schemaFile) != 0){           //now we have valid tree & valid filenames
+        return false;
+    }
+    xmlFreeDoc(svgAsXML);
+    xmlCleanupParser();
+
+    if (strcmp(img->namespace, "") == 0||img->rectangles == NULL ||img->circles == NULL||img->paths == NULL||img->groups == NULL || img->otherAttributes == NULL){
+        return false;       //validate overarching SVG first
+    }
+    validateAttr(img->otherAttributes, &valid);
+    validateRect(img->rectangles, &valid);  //validate individual lists
+    validateCirc(img->circles, &valid);
+    validatePath(img->paths, &valid);
+    validateGroup(img->groups, &valid);
+
+    if (valid != 0){
+        return false;
+    }
+    return true;
+}   

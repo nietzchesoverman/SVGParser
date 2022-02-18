@@ -85,3 +85,10 @@ void rectToXML(xmlNode* parentNode, List* elementList);
 void circToXML(xmlNode* parentNode, List* elementList);
 void pathToXML(xmlNode* parentNode, List* elementList);
 void groupToXML(xmlNode* parentNode, List* elementList);
+
+//SVG Validation
+void validateAttr(List* attrList, int* valid);
+void validateRect(List* rectList, int* valid);
+void validateCirc(List* circList, int* valid);
+void validatePath(List* pathList, int* valid);
+void validateGroup(List* groupList, int* valid);
