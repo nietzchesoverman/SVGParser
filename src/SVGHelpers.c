@@ -538,3 +538,144 @@ void validateGroup(List* groupList, int* valid){
         validateGroup(grp->groups, valid);
     }
 }
+//Mod2
+bool setAttr(List* attrList, Attribute* newAttribute){
+    ListIterator i;
+    void* element;
+
+    i = createIterator(attrList);
+    while ((element = nextElement(&i))!= NULL){
+        Attribute* potentialMatch = (Attribute*)element;                //element with same info doesn't exist
+        if (!strcmp(potentialMatch->name, newAttribute->name)){
+            strcpy(potentialMatch->value, newAttribute->value);
+            free(newAttribute);
+            return true;
+        }
+    }
+    Attribute* addAttr = malloc(sizeof(Attribute) + sizeof(newAttribute->name) + strlen(newAttribute->value) + 1);
+    addAttr->name = malloc(strlen(newAttribute->name) + 1);
+    strcpy(addAttr->name, newAttribute->name);
+    strcpy(addAttr->value, newAttribute->value);
+    insertBack(attrList, (void*)addAttr);
+    free(newAttribute);
+    return true;
+}
+bool setCirc(List* attrList,int elemIndex, Attribute* newAttribute){
+    ListIterator i = createIterator(attrList);
+    Circle* circElement = NULL;
+    int j = 0;
+    void* element;
+
+    while ((element = nextElement(&i))!= NULL){
+        if (j == elemIndex){
+            circElement = (Circle*)element;         //find our circle
+            break;
+        }
+        j++;
+    }
+
+    if (circElement == NULL){       //elemIndex is messed
+        return false;
+    }
+
+    if (!strcmp(newAttribute->name, "cx")){
+        circElement->cx = atof(newAttribute->value);
+        free(newAttribute);
+        return true;
+    }else if (!strcmp(newAttribute->name, "cy")){
+        circElement->cy = atof(newAttribute->value);
+        free(newAttribute);
+        return true;
+    }else if (!strcmp(newAttribute->name, "r")){
+        circElement->r = atof(newAttribute->value);
+        free(newAttribute);
+        return true;
+    }else{      //attribute of a circle
+        return setAttr(circElement->otherAttributes, newAttribute);
+    }
+}
+bool setRect(List* attrList,int elemIndex, Attribute* newAttribute){
+    ListIterator i = createIterator(attrList);
+    Rectangle* rectElement = NULL;
+    int j = 0;
+    void* element;
+
+    while ((element = nextElement(&i))!= NULL){
+        if (j == elemIndex){
+            rectElement = (Rectangle*)element;         //find our rect
+            break;
+        }
+        j++;
+    }
+
+    if (rectElement == NULL){
+        return false;
+    }
+
+    if (!strcmp(newAttribute->name, "x")){
+        rectElement->x = atof(newAttribute->value);
+        free(newAttribute);
+        return true;
+    }else if (!strcmp(newAttribute->name, "t")){
+        rectElement->y = atof(newAttribute->value);
+        free(newAttribute);
+        return true;
+    }else if (!strcmp(newAttribute->name, "width")){
+        rectElement->width = atof(newAttribute->value);
+        free(newAttribute);
+        return true;
+    }else if (!strcmp(newAttribute->name, "height")){
+        rectElement->height = atof(newAttribute->value);
+        free(newAttribute);
+        return true;
+    }else{      //attribute of a circle
+        return setAttr(rectElement->otherAttributes, newAttribute);
+    }
+}
+bool setPath(List* attrList,int elemIndex, Attribute* newAttribute){
+    ListIterator i = createIterator(attrList);
+    Path* pathElement = NULL;
+    int j = 0;
+    void* element;
+
+    while ((element = nextElement(&i))!= NULL){
+        if (j == elemIndex){
+            pathElement = (Path*)element;         //find our path
+            break;
+        }
+        j++;
+    }
+
+    if (pathElement == NULL){
+        return false;
+    }
+
+    if (!strcmp(newAttribute->name, "d")){
+        strcpy(pathElement->data, newAttribute->value);
+        free(newAttribute);
+        return true;
+    }else{
+        return setAttr(pathElement->otherAttributes, newAttribute);
+    }
+}
+
+bool setGroup(List* attrList,int elemIndex, Attribute* newAttribute){
+    ListIterator i = createIterator(attrList);
+    Group* grpElement = NULL;
+    int j = 0;
+    void* element;
+
+    while ((element = nextElement(&i))!= NULL){
+        if (j == elemIndex){
+            grpElement = (Group*)element;         //find our path
+            break;
+        }
+        j++;
+    }
+
+    if (grpElement == NULL){        //if its null then the iterator didnt work
+        return false;
+    }
+
+    return setAttr(grpElement->otherAttributes, newAttribute);
+}

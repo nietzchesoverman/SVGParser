@@ -554,6 +554,8 @@ bool writeSVG(const SVG* img, const char* fileName){
 
     newSVGtoXMLDoc = svgToXML(img);
     if (xmlSaveFormatFileEnc(fileName, newSVGtoXMLDoc, "UTF-8", 1) == -1){      //error check the write file return value
+        xmlFreeDoc(newSVGtoXMLDoc);
+        xmlCleanupParser();
         return false;
     } 
 
@@ -586,4 +588,24 @@ bool validateSVG(const SVG* img, const char* schemaFile){
         return false;
     }
     return true;
-}   
+}
+
+bool setAttribute(SVG* img, elementType elemType, int elemIndex, Attribute* newAttribute){
+    if (img == NULL|| elemType < 0 || elemType > 4 || newAttribute == NULL || newAttribute->name == NULL || newAttribute->value == NULL || elemIndex < 0){        //error check the input
+        return false;
+    }
+    
+
+    if (elemType == 0){                             //SVG attribute, ignore index
+        return setAttr(img->otherAttributes, newAttribute);
+    }else if(elemType == 1){
+        return setCirc(img->circles, elemIndex, newAttribute);
+    }else if(elemType == 2){
+        return setRect(img->rectangles, elemIndex, newAttribute);
+    }else if(elemType == 3){
+        return setPath(img->paths, elemIndex, newAttribute);
+    }else if (elemType == 4){
+        return setGroup(img->groups, elemIndex, newAttribute);
+    }
+    return false;
+}

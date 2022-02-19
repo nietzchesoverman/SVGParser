@@ -73,6 +73,7 @@ void digForGroups(List* masterList, void* singleGroup);
 
 
 /*ASSIGNMENT 2*/
+//Mod1
 //validates an xmlDocument against a schema file
 int validateTree(xmlDoc* document, const char* schemaFile);
 int checkExtension(const char* fileName, char* extension);
@@ -92,3 +93,11 @@ void validateRect(List* rectList, int* valid);
 void validateCirc(List* circList, int* valid);
 void validatePath(List* pathList, int* valid);
 void validateGroup(List* groupList, int* valid);
+
+//Mod2
+//setFunctions for the different elements
+bool setAttr(List* attrList, Attribute* newAttribute);
+bool setCirc(List* attrList,int elemIndex, Attribute* newAttribute);
+bool setRect(List* attrList,int elemIndex, Attribute* newAttribute);
+bool setPath(List* attrList,int elemIndex, Attribute* newAttribute);
+bool setGroup(List* attrList,int elemIndex, Attribute* newAttribute);
