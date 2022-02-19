@@ -597,6 +597,11 @@ bool setAttribute(SVG* img, elementType elemType, int elemIndex, Attribute* newA
     
 
     if (elemType == 0){                             //SVG attribute, ignore index
+        if (!strcmp(newAttribute->name, "xmlns")){
+            strncpy(img->namespace, newAttribute->value, 256);
+            free(newAttribute);
+            return true;
+        }
         return setAttr(img->otherAttributes, newAttribute);
     }else if(elemType == 1){
         return setCirc(img->circles, elemIndex, newAttribute);
@@ -608,4 +613,17 @@ bool setAttribute(SVG* img, elementType elemType, int elemIndex, Attribute* newA
         return setGroup(img->groups, elemIndex, newAttribute);
     }
     return false;
+}
+void addComponent(SVG* img, elementType type, void* newElement){
+    if (img == NULL || type < 1 || type > 3 || newElement == NULL){
+        return;
+    }
+
+    if (type == 1){
+        insertBack(img->circles, newElement);
+    }else if(type == 2){
+        insertBack(img->rectangles, newElement);
+    }else if (type == 3){
+        insertBack(img->paths, newElement);
+    }
 }
