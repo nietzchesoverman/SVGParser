@@ -589,7 +589,7 @@ bool validateSVG(const SVG* img, const char* schemaFile){
     }
     return true;
 }
-
+//Mod 2
 bool setAttribute(SVG* img, elementType elemType, int elemIndex, Attribute* newAttribute){
     if (img == NULL|| elemType < 0 || elemType > 4 || newAttribute == NULL || newAttribute->name == NULL || newAttribute->value == NULL || elemIndex < 0){        //error check the input
         return false;
@@ -626,4 +626,78 @@ void addComponent(SVG* img, elementType type, void* newElement){
     }else if (type == 3){
         insertBack(img->paths, newElement);
     }
+}
+//mod 3
+char* attrToJSON(const Attribute *a){
+    char* output = malloc(sizeof(Attribute) + 27);
+    sprintf(output, "{}");
+    if (a == NULL){
+        return output;
+    }
+
+    sprintf(output, "{\"name\":\"%s\",\"value\":\"%s\"}", a->name, a->value);
+
+    return output;
+}
+char* circleToJSON(const Circle *c){
+    char* output = malloc(sizeof(Circle) + strlen(c->units) + 58);
+    sprintf(output, "{}");
+    if (c == NULL){
+        return output;
+    }
+
+    sprintf(output, "{\"cx\":%.2f,\"cy\":%.2f,\"r\":%.2f,\"numAttr\":%d,\"units\":\"%s\"}", c->cx, c->cy, c->r, getLength(c->otherAttributes), c->units);
+
+    return output;
+}
+char* rectToJSON(const Rectangle *r){
+    char* output = malloc(sizeof(Rectangle) + strlen(r->units) + 65);
+    sprintf(output, "{}");
+    if (r == NULL){
+        return output;
+    }
+
+    sprintf(output, "{\"x\":%.2f,\"y\":%.2f,\"w\":%.2f,\"h\":%.2f,\"numAttr\":%d,\"units\":\"%s\"}", r->x, r->y, r->width, r->height, getLength(r->otherAttributes), r->units);
+
+    return output;
+}
+char* pathToJSON(const Path *p){
+    char* output = malloc(sizeof(Path) + strlen(p->data) + 25);
+    sprintf(output, "{}");
+    if (p == NULL){
+        return output;
+    }
+
+    sprintf(output, "{\"d\":\"%s\",\"numAttr\":%d}", p->data, getLength(p->otherAttributes));
+
+    return output;
+}
+char* groupToJSON(const Group *g){
+    char* output = malloc(sizeof(Group) + 25);
+    sprintf(output, "{}");
+    if (g == NULL){
+        return output;
+    }
+
+    sprintf(output, "{\"children\":%d,\"numAttr\":%d}", getLength(g->circles) + getLength(g->groups) + getLength(g->paths) + getLength(g->rectangles), getLength(g->otherAttributes));
+    return output;
+}
+char* SVGtoJSON(const SVG* img){
+    char* output = malloc(sizeof(SVG) + 58);
+    sprintf(output, "{}");
+    if (img == NULL){
+        return output;
+    }
+    List* rects = getRects(img);
+    List* circs = getCircles(img);
+    List* paths = getPaths(img);
+    List* grp = getGroups(img);
+
+    sprintf(output, "{\"numRect\":%d,\"numCirc\":%d,\"numPaths\":%d,\"numGroups\":%d}", getLength(rects), getLength(circs), getLength(paths), getLength(grp));
+
+    freeList(rects);
+    freeList(circs);
+    freeList(paths);
+    freeList(grp);
+    return output;
 }
