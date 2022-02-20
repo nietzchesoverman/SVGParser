@@ -479,7 +479,11 @@ void validateAttr(List* attrList, int* valid){
     void* element;
     while ((element = nextElement(&i))!=NULL){
         Attribute* attr = (Attribute*)element;
-        if (attr->name == NULL){
+        if (attr == NULL){
+            (*valid) -= 1;
+            return; 
+        }
+        if (attr->name == NULL || attr->value == NULL){
             (*valid) -= 1;
             return;
         }
@@ -491,8 +495,16 @@ void validateRect(List* rectList, int* valid){
 
     while ((element = nextElement(&i))!=NULL){
         Rectangle* rect = (Rectangle*)element;
+        if (rect == NULL){
+            (*valid) -= 1;
+            return; 
+        }
+        if (rect->otherAttributes == NULL || rect->units == NULL){
+            (*valid) -= 1;
+            return;
+        }
         validateAttr(rect->otherAttributes, valid);
-        if (rect->width < 0 || rect->height < 0 || rect->otherAttributes == NULL){
+        if (rect->width < 0 || rect->height < 0){
             (*valid) -= -1;
             return;
         }
@@ -503,8 +515,16 @@ void validateCirc(List* circList, int* valid){
     void* element;
     while ((element = nextElement(&i))!=NULL){
         Circle* circ = (Circle*)element;
+        if (circ == NULL){
+            (*valid) -= 1;
+            return; 
+        }
+        if (circ->otherAttributes == NULL ||  circ->units == NULL){
+            (*valid) -=1;
+            return;
+        }
         validateAttr(circ->otherAttributes, valid);
-        if (circ->r < 0 || circ->otherAttributes == NULL){
+        if (circ->r < 0){
             (*valid) -= -1;
             return;
         }
@@ -515,8 +535,16 @@ void validatePath(List* pathList, int* valid){
     void* element;
     while ((element = nextElement(&i))!=NULL){
         Path* path = (Path*)element;
+        if (path == NULL){
+            (*valid) -= 1;
+            return; 
+        }
+        if (path->otherAttributes == NULL){
+            (*valid) -=1;
+            return;
+        }
         validateAttr(path->otherAttributes, valid);
-        if (path->data == NULL || path->otherAttributes == NULL){
+        if (path->data == NULL){
             (*valid) -= 1;
             return;
         }
@@ -527,6 +555,10 @@ void validateGroup(List* groupList, int* valid){
     void* element;
     while ((element = nextElement(&i))!=NULL){
         Group* grp = (Group*)element;
+        if (grp == NULL){
+            (*valid) -= 1;
+            return; 
+        }
         if (grp->rectangles == NULL ||grp->circles == NULL || grp->paths == NULL || grp->groups == NULL || grp->otherAttributes == NULL){
             (*valid) -= 1;
             return;
@@ -552,7 +584,7 @@ bool setAttr(List* attrList, Attribute* newAttribute){
             return true;
         }
     }
-    Attribute* addAttr = malloc(sizeof(Attribute) + sizeof(newAttribute->name) + strlen(newAttribute->value) + 1);
+    Attribute* addAttr = (Attribute*)malloc(sizeof(Attribute) + strlen(newAttribute->name) + strlen(newAttribute->value) + 1);
     addAttr->name = malloc(strlen(newAttribute->name) + 1);
     strcpy(addAttr->name, newAttribute->name);
     strcpy(addAttr->value, newAttribute->value);
@@ -616,7 +648,7 @@ bool setRect(List* attrList,int elemIndex, Attribute* newAttribute){
         rectElement->x = atof(newAttribute->value);
         free(newAttribute);
         return true;
-    }else if (!strcmp(newAttribute->name, "t")){
+    }else if (!strcmp(newAttribute->name, "y")){
         rectElement->y = atof(newAttribute->value);
         free(newAttribute);
         return true;

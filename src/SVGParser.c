@@ -548,7 +548,10 @@ SVG* createValidSVG(const char* fileName, const char* schemaFile){
 bool writeSVG(const SVG* img, const char* fileName){
     xmlDoc* newSVGtoXMLDoc = NULL;
 
-    if (strcmp(fileName, "") == 0 || fileName == NULL){
+    if (fileName == NULL || img == NULL){
+        return false;
+    }
+    if (strcmp(fileName, "") == 0){
         return false;
     }
 
@@ -564,17 +567,10 @@ bool writeSVG(const SVG* img, const char* fileName){
     return true;
 }
 bool validateSVG(const SVG* img, const char* schemaFile){
-    if (img == NULL || schemaFile == NULL || strcmp(schemaFile, "") == 0 || checkExtension(schemaFile, ".xsd") != 0){
+    if (img == NULL || schemaFile == NULL){
         return false;
     }
-    xmlDoc* svgAsXML = svgToXML(img);
     int valid = 0;
-    if (validateTree(svgAsXML, schemaFile) != 0){           //now we have valid tree & valid filenames
-        return false;
-    }
-    xmlFreeDoc(svgAsXML);
-    xmlCleanupParser();
-
     if (strcmp(img->namespace, "") == 0||img->rectangles == NULL ||img->circles == NULL||img->paths == NULL||img->groups == NULL || img->otherAttributes == NULL){
         return false;       //validate overarching SVG first
     }
@@ -587,6 +583,15 @@ bool validateSVG(const SVG* img, const char* schemaFile){
     if (valid != 0){
         return false;
     }
+    if (strcmp(schemaFile, "") == 0 || checkExtension(schemaFile, ".xsd") != 0){
+        return false;
+    }
+    xmlDoc* svgAsXML = svgToXML(img);
+    if (validateTree(svgAsXML, schemaFile) != 0){           //now we have valid tree & valid filenames
+        return false;
+    }
+    xmlFreeDoc(svgAsXML);
+    xmlCleanupParser();
     return true;
 }
 //Mod 2
@@ -594,7 +599,6 @@ bool setAttribute(SVG* img, elementType elemType, int elemIndex, Attribute* newA
     if (img == NULL|| elemType < 0 || elemType > 4 || newAttribute == NULL || newAttribute->name == NULL || newAttribute->value == NULL || elemIndex < 0){        //error check the input
         return false;
     }
-    
 
     if (elemType == 0){                             //SVG attribute, ignore index
         if (!strcmp(newAttribute->name, "xmlns")){
@@ -629,44 +633,49 @@ void addComponent(SVG* img, elementType type, void* newElement){
 }
 //mod 3
 char* attrToJSON(const Attribute *a){
-    char* output = malloc(sizeof(Attribute) + 27);
+    char* output = malloc(4);
     sprintf(output, "{}");
     if (a == NULL){
         return output;
     }
-
+    free(output);
+    output = malloc(sizeof(Attribute) + strlen(a->name) + strlen(a->value) +27);
     sprintf(output, "{\"name\":\"%s\",\"value\":\"%s\"}", a->name, a->value);
 
     return output;
 }
 char* circleToJSON(const Circle *c){
-    char* output = malloc(sizeof(Circle) + strlen(c->units) + 58);
+    char* output = malloc(4);
     sprintf(output, "{}");
     if (c == NULL){
         return output;
     }
-
+    free(output);
+    output = malloc(sizeof(Circle) + strlen(c->units) + 58);
     sprintf(output, "{\"cx\":%.2f,\"cy\":%.2f,\"r\":%.2f,\"numAttr\":%d,\"units\":\"%s\"}", c->cx, c->cy, c->r, getLength(c->otherAttributes), c->units);
 
     return output;
 }
 char* rectToJSON(const Rectangle *r){
-    char* output = malloc(sizeof(Rectangle) + strlen(r->units) + 65);
+    char* output = malloc(4);
     sprintf(output, "{}");
     if (r == NULL){
         return output;
     }
-
+    free(output);
+    output = malloc(sizeof(Rectangle) + strlen(r->units) + 65);
     sprintf(output, "{\"x\":%.2f,\"y\":%.2f,\"w\":%.2f,\"h\":%.2f,\"numAttr\":%d,\"units\":\"%s\"}", r->x, r->y, r->width, r->height, getLength(r->otherAttributes), r->units);
 
     return output;
 }
 char* pathToJSON(const Path *p){
-    char* output = malloc(sizeof(Path) + strlen(p->data) + 25);
+    char* output = malloc(4);
     sprintf(output, "{}");
     if (p == NULL){
         return output;
     }
+    free(output);
+    output = malloc(sizeof(Path) + strlen(p->data) + 25);
 
     sprintf(output, "{\"d\":\"%s\",\"numAttr\":%d}", p->data, getLength(p->otherAttributes));
 
@@ -699,5 +708,150 @@ char* SVGtoJSON(const SVG* img){
     freeList(circs);
     freeList(paths);
     freeList(grp);
+    return output;
+}
+char* attrListToJSON(const List *list){
+    char* output = malloc(sizeof(char) * 4);
+    sprintf(output, "[]");
+    if (list == NULL){
+        return output;
+    }
+    if (getLength((List*)list) == 0){
+        return output;
+    }
+    sprintf(output, "[");
+    ListIterator i = createIterator((List*)list);
+    void* element;
+    char* temp;
+    int j = 0;
+
+    while ((element = nextElement(&i))!= NULL){
+        temp = attrToJSON((Attribute*)element);
+        output = realloc(output, strlen(output) + strlen(temp) + 2);
+        strcat(output, temp);
+        j++;
+        if (j != getLength((List*)list)){
+            strcat(output, ",");
+        }
+        free(temp);
+    }
+    output = realloc(output, strlen(output) + 2);
+    strcat(output, "]");
+    return output;
+}
+char* circListToJSON(const List *list){
+    char* output = malloc(sizeof(char) * 4);
+    sprintf(output, "[]");
+    if (list == NULL){
+        return output;
+    }
+    if (getLength((List*)list) == 0){
+        return output;
+    }
+    sprintf(output, "[");
+    ListIterator i = createIterator((List*)list);
+    void* element;
+    char* temp;
+    int j = 0;
+
+    while ((element = nextElement(&i))!= NULL){
+        temp = circleToJSON((Circle*)element);
+        output = realloc(output, strlen(output) + strlen(temp) + 2);
+        strcat(output, temp);
+        j++;
+        if (j != getLength((List*)list)){
+            strcat(output, ",");
+        }
+        free(temp);
+    }
+    output = realloc(output, strlen(output) + 2);
+    strcat(output, "]");
+    return output;
+}
+char* rectListToJSON(const List *list){
+    char* output = malloc(sizeof(char) * 4);
+    sprintf(output, "[]");
+    if (list == NULL){
+        return output;
+    }
+    if (getLength((List*)list) == 0){
+        return output;
+    }
+    sprintf(output, "[");
+    ListIterator i = createIterator((List*)list);
+    void* element;
+    char* temp;
+    int j = 0;
+
+    while ((element = nextElement(&i))!= NULL){
+        temp = rectToJSON((Rectangle*)element);
+        output = realloc(output, strlen(output) + strlen(temp) + 2);
+        strcat(output, temp);
+        j++;
+        if (j != getLength((List*)list)){
+            strcat(output, ",");
+        }
+        free(temp);
+    }
+    output = realloc(output, strlen(output) + 2);
+    strcat(output, "]");
+    return output;
+}
+char* pathListToJSON(const List *list){
+    char* output = malloc(sizeof(char) * 4);
+    sprintf(output, "[]");
+    if (list == NULL){
+        return output;
+    }
+    if (getLength((List*)list) == 0){
+        return output;
+    }
+    sprintf(output, "[");
+    ListIterator i = createIterator((List*)list);
+    void* element;
+    char* temp;
+    int j = 0;
+
+    while ((element = nextElement(&i))!= NULL){
+        temp = pathToJSON((Path*)element);
+        output = realloc(output, strlen(output) + strlen(temp) + 2);
+        strcat(output, temp);
+        j++;
+        if (j != getLength((List*)list)){
+            strcat(output, ",");
+        }
+        free(temp);
+    }
+    output = realloc(output, strlen(output) + 2);
+    strcat(output, "]");
+    return output;
+}
+char* groupListToJSON(const List *list){
+    char* output = malloc(sizeof(char) * 4);
+    sprintf(output, "[]");
+    if (list == NULL){
+        return output;
+    }
+    if (getLength((List*)list) == 0){
+        return output;
+    }
+    sprintf(output, "[");
+    ListIterator i = createIterator((List*)list);
+    void* element;
+    char* temp;
+    int j = 0;
+
+    while ((element = nextElement(&i))!= NULL){
+        temp = groupToJSON((Group*)element);
+        output = realloc(output, strlen(output) + strlen(temp) + 2);
+        strcat(output, temp);
+        j++;
+        if (j != getLength((List*)list)){
+            strcat(output, ",");
+        }
+        free(temp);
+    }
+    output = realloc(output, strlen(output) + 2);
+    strcat(output, "]");
     return output;
 }
