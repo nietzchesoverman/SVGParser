@@ -579,7 +579,7 @@ bool setAttr(List* attrList, Attribute* newAttribute){
     while ((element = nextElement(&i))!= NULL){
         Attribute* potentialMatch = (Attribute*)element;                //element with same info doesn't exist
         if (!strcmp(potentialMatch->name, newAttribute->name)){
-            //potentialMatch = realloc(potentialMatch, sizeof(Attribute) + strlen(potentialMatch->name) + strlen(newAttribute->value) + 1);
+            potentialMatch = realloc(potentialMatch, sizeof(Attribute) + strlen(potentialMatch->name) + strlen(newAttribute->value) + 1);
             strcpy(potentialMatch->value, newAttribute->value);
             deleteAttribute((void*)newAttribute);
             return true;
