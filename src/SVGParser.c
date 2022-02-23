@@ -596,24 +596,42 @@ bool validateSVG(const SVG* img, const char* schemaFile){
 }
 //Mod 2
 bool setAttribute(SVG* img, elementType elemType, int elemIndex, Attribute* newAttribute){
-    if (img == NULL|| elemType < 0 || elemType > 4 || newAttribute == NULL || newAttribute->name == NULL || newAttribute->value == NULL || elemIndex < 0){        //error check the input
+    if (img == NULL|| elemType < 0 || elemType > 4 || newAttribute == NULL || newAttribute->name == NULL || newAttribute->value == NULL || (elemIndex < 0 && elemType != 0) ){        //error check the input
+        return false;
+    }
+    if (!strcmp(newAttribute->name,"") || !strcmp(newAttribute->value, "")){
         return false;
     }
 
-    if (elemType == 0){                             //SVG attribute, ignore index
+    if (elemType == SVG_IMG){                             //SVG attribute, ignore index
         if (!strcmp(newAttribute->name, "xmlns")){
             strncpy(img->namespace, newAttribute->value, 256);
-            free(newAttribute);
+            deleteAttribute((void*)newAttribute);
             return true;
         }
+        if (img->otherAttributes == NULL){
+            return false;
+        }
         return setAttr(img->otherAttributes, newAttribute);
-    }else if(elemType == 1){
+    }else if(elemType == CIRC){
+        if (img->circles == NULL){
+            return false;
+        }
         return setCirc(img->circles, elemIndex, newAttribute);
-    }else if(elemType == 2){
+    }else if(elemType == RECT){
+        if (img->rectangles == NULL){
+            return false;
+        }
         return setRect(img->rectangles, elemIndex, newAttribute);
-    }else if(elemType == 3){
+    }else if(elemType == PATH){
+        if (img->paths == NULL){
+            return false;
+        }
         return setPath(img->paths, elemIndex, newAttribute);
-    }else if (elemType == 4){
+    }else if (elemType == GROUP){
+        if (img->groups == NULL){
+            return false;
+        }
         return setGroup(img->groups, elemIndex, newAttribute);
     }
     return false;

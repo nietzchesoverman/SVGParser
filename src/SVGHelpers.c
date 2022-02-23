@@ -579,17 +579,13 @@ bool setAttr(List* attrList, Attribute* newAttribute){
     while ((element = nextElement(&i))!= NULL){
         Attribute* potentialMatch = (Attribute*)element;                //element with same info doesn't exist
         if (!strcmp(potentialMatch->name, newAttribute->name)){
+            //potentialMatch = realloc(potentialMatch, sizeof(Attribute) + strlen(potentialMatch->name) + strlen(newAttribute->value) + 1);
             strcpy(potentialMatch->value, newAttribute->value);
-            free(newAttribute);
+            deleteAttribute((void*)newAttribute);
             return true;
         }
     }
-    Attribute* addAttr = (Attribute*)malloc(sizeof(Attribute) + strlen(newAttribute->name) + strlen(newAttribute->value) + 1);
-    addAttr->name = malloc(strlen(newAttribute->name) + 1);
-    strcpy(addAttr->name, newAttribute->name);
-    strcpy(addAttr->value, newAttribute->value);
-    insertBack(attrList, (void*)addAttr);
-    free(newAttribute);
+    insertBack(attrList, (void*)newAttribute);
     return true;
 }
 bool setCirc(List* attrList,int elemIndex, Attribute* newAttribute){
@@ -597,11 +593,12 @@ bool setCirc(List* attrList,int elemIndex, Attribute* newAttribute){
     Circle* circElement = NULL;
     int j = 0;
     void* element;
-
+    if (elemIndex >= getLength(attrList)){
+        return false;
+    }
     while ((element = nextElement(&i))!= NULL){
         if (j == elemIndex){
             circElement = (Circle*)element;         //find our circle
-            break;
         }
         j++;
     }
@@ -611,16 +608,16 @@ bool setCirc(List* attrList,int elemIndex, Attribute* newAttribute){
     }
 
     if (!strcmp(newAttribute->name, "cx")){
-        circElement->cx = atof(newAttribute->value);
-        free(newAttribute);
+        circElement->cx = strtof(newAttribute->value, NULL);
+        deleteAttribute((void*)newAttribute);
         return true;
     }else if (!strcmp(newAttribute->name, "cy")){
-        circElement->cy = atof(newAttribute->value);
-        free(newAttribute);
+        circElement->cy = strtof(newAttribute->value, NULL);
+        deleteAttribute((void*)newAttribute);
         return true;
     }else if (!strcmp(newAttribute->name, "r")){
-        circElement->r = atof(newAttribute->value);
-        free(newAttribute);
+        circElement->r = strtof(newAttribute->value, NULL);
+        deleteAttribute((void*)newAttribute);
         return true;
     }else{      //attribute of a circle
         return setAttr(circElement->otherAttributes, newAttribute);
@@ -631,11 +628,13 @@ bool setRect(List* attrList,int elemIndex, Attribute* newAttribute){
     Rectangle* rectElement = NULL;
     int j = 0;
     void* element;
+    if (elemIndex >= getLength(attrList)){
+        return false;
+    }
 
     while ((element = nextElement(&i))!= NULL){
         if (j == elemIndex){
             rectElement = (Rectangle*)element;         //find our rect
-            break;
         }
         j++;
     }
@@ -645,20 +644,20 @@ bool setRect(List* attrList,int elemIndex, Attribute* newAttribute){
     }
 
     if (!strcmp(newAttribute->name, "x")){
-        rectElement->x = atof(newAttribute->value);
-        free(newAttribute);
+        rectElement->x = strtof(newAttribute->value, NULL);
+        deleteAttribute((void*)newAttribute);
         return true;
     }else if (!strcmp(newAttribute->name, "y")){
-        rectElement->y = atof(newAttribute->value);
-        free(newAttribute);
+        rectElement->y = strtof(newAttribute->value, NULL);
+        deleteAttribute((void*)newAttribute);
         return true;
     }else if (!strcmp(newAttribute->name, "width")){
-        rectElement->width = atof(newAttribute->value);
-        free(newAttribute);
+        rectElement->width = strtof(newAttribute->value, NULL);
+        deleteAttribute((void*)newAttribute);
         return true;
     }else if (!strcmp(newAttribute->name, "height")){
-        rectElement->height = atof(newAttribute->value);
-        free(newAttribute);
+        rectElement->height = strtof(newAttribute->value, NULL);
+        deleteAttribute((void*)newAttribute);
         return true;
     }else{      //attribute of a circle
         return setAttr(rectElement->otherAttributes, newAttribute);
@@ -669,11 +668,13 @@ bool setPath(List* attrList,int elemIndex, Attribute* newAttribute){
     Path* pathElement = NULL;
     int j = 0;
     void* element;
+    if (elemIndex >= getLength(attrList)){
+        return false;
+    }
 
     while ((element = nextElement(&i))!= NULL){
         if (j == elemIndex){
             pathElement = (Path*)element;         //find our path
-            break;
         }
         j++;
     }
@@ -683,8 +684,9 @@ bool setPath(List* attrList,int elemIndex, Attribute* newAttribute){
     }
 
     if (!strcmp(newAttribute->name, "d")){
+        pathElement = realloc(pathElement, sizeof(Path) + strlen(newAttribute->name) + strlen(newAttribute->value) + 1);
         strcpy(pathElement->data, newAttribute->value);
-        free(newAttribute);
+        deleteAttribute((void*)newAttribute);
         return true;
     }else{
         return setAttr(pathElement->otherAttributes, newAttribute);
@@ -696,11 +698,13 @@ bool setGroup(List* attrList,int elemIndex, Attribute* newAttribute){
     Group* grpElement = NULL;
     int j = 0;
     void* element;
+    if (elemIndex >= getLength(attrList)){
+        return false;
+    }
 
     while ((element = nextElement(&i))!= NULL){
         if (j == elemIndex){
-            grpElement = (Group*)element;         //find our path
-            break;
+            grpElement = (Group*)element;         //find our group
         }
         j++;
     }
