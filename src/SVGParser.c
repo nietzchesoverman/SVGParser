@@ -693,8 +693,8 @@ char* pathToJSON(const Path *p){
         return output;
     }
     free(output);
-    output = malloc(sizeof(Path) + strlen(p->data) + 25);
-    char* truncatedPath = malloc(sizeof(char)*65);
+    output = malloc(sizeof(Path) + 65 + 25);
+    char* truncatedPath = calloc(65, sizeof(char));
     strncpy(truncatedPath, p->data, 64);
 
     sprintf(output, "{\"d\":\"%s\",\"numAttr\":%d}", truncatedPath, getLength(p->otherAttributes));
