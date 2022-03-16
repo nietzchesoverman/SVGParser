@@ -694,9 +694,11 @@ char* pathToJSON(const Path *p){
     }
     free(output);
     output = malloc(sizeof(Path) + strlen(p->data) + 25);
+    char* truncatedPath = malloc(sizeof(char)*65);
+    strncpy(truncatedPath, p->data, 64);
 
-    sprintf(output, "{\"d\":\"%s\",\"numAttr\":%d}", p->data, getLength(p->otherAttributes));
-
+    sprintf(output, "{\"d\":\"%s\",\"numAttr\":%d}", truncatedPath, getLength(p->otherAttributes));
+    free(truncatedPath);
     return output;
 }
 char* groupToJSON(const Group *g){
