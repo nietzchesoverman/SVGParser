@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>CHANGE ME</title>
+    <title>SVG Image Viewer</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="CHANGE ME">
-    <meta name="keywords" content="CHANGE ME">
-    <meta name="author" content="CHANGE ME">
+    <meta name="description" content="View, change, upload and download SVGs!">
+    <meta name="keywords" content="SVG Image">
+    <meta name="author" content="Yousif Jamal">
     <!-- Load jquery, bootstrap -->
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
@@ -17,14 +17,117 @@
     <!-- Custom CSS End -->
 </head>
 <body>
-    <h3>Download test</h3>
-    If the A3 stub is running and rects.svg exists in the uploads/ directory on the server, then clicking on the link below will download it from the server.<br>
-    <a href="rects.svg" download>rects.svg</a>
-    <p></p>
+    <h2>File Log</h2>
+    <div id='fileLogDiv'>
+        <table>
+            <thead>
+                <tr>
+                    <th>Image<br>(click to download)</th>
+                    <th>File Name<br>(click to download)</th>
+                    <th>File Size</th>
+                    <th>Number of Rectangles</th>
+                    <th>Number of Circles</th>
+                    <th>Number of Paths</th>
+                    <th>Number of Groups</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>No file uploaded</td>
+                    <td><a href="rects.svg" download>no file name</a></td>
+                    <td>0kb</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <form ref='uploadForm'
+		id='uploadForm'
+        action='/upload'
+        method='post'
+        encType="multipart/form-data"
+        class="upAlign">
+        <div class="form-group">
+      	    <input type="file" name="uploadFile" class="btn btn-secondary">
+      	    <input type='submit' value='Upload' class="btn btn-secondary">
+        </div>
+`   </form>
+    <hr>
 
+    <h2>SVG View</h2>
+    <select id="fileDropDown">
+        <option value="new">NewFile</option>
+        <option value="new">other file</option>
+        <option value="new">even other</option>
+    </select>
+    <h4 class="viewMeta">Title</h4>
+    <h6 class="viewMeta">Description</h6>
+    <div id="svgViewDiv">
+        <table id="svgViewTable">
+            <td id="svgImageCell">
+                SVG IMAGE HERE
+            </td>
+        </table>
+        <table id="componentTable">
+            <thead>
+                <tr>
+                    <th>Component</th>
+                    <th>Summary</th>
+                    <th>Other Attributes</th>
+                </tr>
+            </thead>
+            <tbody >
+                <tr>
+                    <td class="componentDisplay">Path/Group/Circ/Rect</td>
+                    <td class="componentDisplay"><input type="text" value="40cm"></td>
+                    <td class="componentDisplay">5</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <input type='submit' value="Update" class="btn btn-secondary float-right">
+    </div>
+    <br>
+    <br>
     <hr>
+    <h2>Update Properites</h2>
+    <br>
+    <h4>Show/Edit Other Attributes</h4>
+    <table id="showEditOA">
+        <thead>
+            <th>Attribute</th>
+            <th>Value</th>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="otherAttributes">fill</td>
+                <td class="otherAttributes"><input type="text" value="2504f"></td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="otherAttributes-Submit">
+        <input type='submit' value="Edit" class="btn btn-secondary float-right">
+    </div>
+    <div class="otherAttributes-Show">
+        <input type='submit' value="Show Attributes" class="btn btn-secondary float-right">
+    </div>
+    <br>
+    <br>
+    <br>
+    <h4>Edit Title/Description</h4>
+    <div id="titleDesc">
+        <input type="text" maxlength="256" class="bigTextField" value="">
+        <br>
+        <input type='submit' value="Edit Title" class="btn btn-secondary float-right">
+        <input type='submit' value="Edit Description" id="descEdit" class="btn btn-secondary float-right">
+    </div>
+    
+    <!------------
     <div id="blah">I am blah</div>
-    <hr>
     <form ref='someform'
           id='someform'>
           <div class="form-group">
@@ -34,18 +137,7 @@
         <div class="form-group">
             <input type='submit' class="btn btn-secondary">
         </div>
-    </form>
-
-    <form ref='uploadForm'
-		id='uploadForm'
-      action='/upload'
-      method='post'
-      encType="multipart/form-data">
-      <div class="form-group">
-      	<input type="file" name="uploadFile" class="btn btn-secondary">
-      	<input type='submit' value='Upload' class="btn btn-secondary">
-      </div>
-`   </form>
+    </form> --->
 
     <!-- Leave me at the bottom of body -->
     <script src="/index.js"></script>

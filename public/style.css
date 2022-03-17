@@ -24,6 +24,71 @@ input[type=submit], button {
     cursor: pointer;
     cursor: hand;
 }
+#fileLogDiv{
+    max-height: 600px;
+    overflow: auto;
+}
+table{
+    max-height: 600px;
+    border: 1px solid black;
+    text-align: center;
+}
+tbody{
+    overflow: auto;
+}
+th{
+    border: 1px solid black;
+    text-align: center;
+}
+td{
+    height: 250px;
+    width: 250px;
+    padding: 10px;
+    overflow: auto;
+    text-align: center;
+}
+.viewMeta{
+    text-align: center;
+}
+#svgViewDiv{
+    align-self: center;
+    text-align: center;
+}
+#svgViewTable{
+    width: 100%;
+}
+#componentTable{
+    width: 100%;
+}
+.componentDisplay{
+    border: 1px solid black;
+    height: auto;
+    width: auto;
+}
+.otherAttributes{
+    border: 1px solid black;
+    height: auto;
+    width: auto;
+    
+}
+#showEditOA{
+    width: 100%;
+}
+.otherAttributes-Show{
+    margin-right: 8%;
+}
+#titleDesc{
+    text-align: left;
+    padding-bottom: 10%;
+}
+.bigTextField{
+    text-align: left;
+    width: 100%;
+    height: 100px;
+}
+#descEdit{
+    margin-right: 2%;
+}
 @media(max-width: 900px) {
     html {
         font-size: 14px !important;
