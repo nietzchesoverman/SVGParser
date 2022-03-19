@@ -37,4 +37,58 @@ jQuery(document).ready(function() {
             //Create an object for connecting to another waypoint
         });
     });
+
+    //Loading up all the files into the fileLog
+    $('#fileLogDiv').html(function(e){
+        $('#svgRow').html("No files: Please upload an SVG");
+        console.log('Uploaded SVGs have been loaded');
+    });
+
+    //populate the dropdown selectors based off current SVGs
+    $('#firstOne').html(function(e){
+        $('#firstOne').html("Updated Selector Value");
+        console.log('selector value updated');
+    });
+
+    //Changing between selections
+    $('#fileDropDown').on('change', function(e){
+        $('#title').text("Title");
+        $('#desc').text("Description");
+        console.log('SVG Changed');
+    });
+
+    //Change Component Info
+    $('#updateComponent').submit(function(e){
+        $('#summary').val("Value was updated!");
+        e.preventDefault();
+        console.log('Components Updated')
+    });
+
+    //Update attributes
+    $('#updateAttr').submit(function(e){
+        $('#attrVal').val("attr has new value!");
+        e.preventDefault();
+        console.log('Attribute value was updated!');
+    });
+        
+    //Showing attributes
+    $('#showAttr').submit(function(e){
+        $('#attr').text("stroke");
+        e.preventDefault();
+        console.log('New Attributes have been shown!');
+    });
+
+    //Editing Title
+    $('#editTitle').submit(function(e){
+        $('#title').text($('#titleDescInput').val());
+        e.preventDefault();
+        console.log('Title Updated');
+    });
+
+    $('#editDesc').submit(function(e){
+        $('#desc').text($('#titleDescInput').val());
+        e.preventDefault();
+        console.log("Description Updated");
+    });
+        
 });
