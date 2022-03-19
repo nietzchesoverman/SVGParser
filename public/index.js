@@ -40,7 +40,19 @@ jQuery(document).ready(function() {
 
     //Loading up all the files into the fileLog
     $('#fileLogDiv').html(function(e){
-        $('#svgRow').html("No files: Please upload an SVG");
+        $.ajax({
+            type: 'get',
+            dataType: 'json',
+            url: 'populateFileLog',
+            success: function(printLog){
+                let parsedString = JSON.parse(printLog.svgString);
+                console.log('we got it! '+parsedString.numPaths);
+            },
+            fail: function(error){
+                $('#svgRow').html("No files: Please upload an SVG");
+                console.log(error);
+            }
+        });
         console.log('Uploaded SVGs have been loaded');
     });
 

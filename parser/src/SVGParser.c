@@ -875,3 +875,10 @@ char* groupListToJSON(const List *list){
     strcat(output, "]");
     return output;
 }
+
+char* SVGCreationWrapper(const char* svgFilename, const char* schemaFile){
+    SVG* newSVG = createValidSVG(svgFilename, schemaFile);
+    char* svgJSON = SVGtoJSON(newSVG);
+    free(newSVG);
+    return svgJSON;
+}

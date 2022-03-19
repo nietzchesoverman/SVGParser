@@ -71,6 +71,21 @@ app.get('/uploads/:name', function(req , res){
 
 //******************** Your code goes here ******************** 
 
+//Setup the library
+let svgLib = ffi.Library('./libsvgparser',{
+  'SVGCreationWrapper': ['string', ['string', 'string']]
+});
+
+app.get('/populateFileLog', function(req , res){
+  let retStr = svgLib.SVGCreationWrapper('uploads/Emoji_poo.svg', 'parser/bin/svg.xsd');
+  
+  res.send(
+    {
+      svgString: retStr
+    }
+  );
+});
+
 //Sample endpoint
 app.get('/endpoint1', function(req , res){
   let retStr = req.query.data1 + " " + req.query.data2;
