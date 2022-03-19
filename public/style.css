@@ -74,17 +74,24 @@ td{
 #showEditOA{
     width: 100%;
 }
+.inputTable{
+    width: 100%;
+}
 .otherAttributes-Show{
     margin-right: 8%;
 }
 #titleDesc{
     text-align: left;
-    padding-bottom: 10%;
 }
 .bigTextField{
     text-align: left;
     width: 100%;
     height: 100px;
+}
+.smallTextField{
+    text-align: left;
+    width: 50%;
+    height: 30px;
 }
 #svgRow{
     width: 100%;
@@ -92,6 +99,18 @@ td{
 #descEdit{
     margin-right: 2%;
 }
+#addShapeDiv{
+    padding-bottom: 10%;
+}
+#addShapeTable{
+    border: none;
+    font-size: small;
+}
+.shapeTable{
+    border: none;
+    width: 100%;
+}
+
 @media(max-width: 900px) {
     html {
         font-size: 14px !important;

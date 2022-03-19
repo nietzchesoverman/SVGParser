@@ -85,10 +85,47 @@ jQuery(document).ready(function() {
         console.log('Title Updated');
     });
 
+    //Editing Description
     $('#editDesc').submit(function(e){
         $('#desc').text($('#titleDescInput').val());
         e.preventDefault();
         console.log("Description Updated");
+    });
+
+    //Scaling Shapes
+    $('#scaleShapeSubmit').submit(function(e){
+        let newVal = $('#scaleFactor').val();
+        $('#scaleFactor').val("");
+        e.preventDefault();
+        console.log($('#shapeScaleSelect').val()+" has been scaled by "+newVal);
+    });
+
+    //Create SVG
+    $('#createSVGSubmit').submit(function(e){
+        let t = $('#createTitleInput').val();
+        let d = $('#createDescInput').val();
+        let l = $('#createFileInput').val();
+        $('#createTitleInput').val("");
+        $('#createDescInput').val("");
+        $('#createFileInput').val("");
+        e.preventDefault();
+        console.log('SVG has been created with '+t+' title, '+d+' description, and '+l+ ' filename');
+    });
+
+    //Add Shape
+    $('#scaleAddSubmit').submit(function(e){
+        let x = $('#x').val();
+        let y = $('#y').val();
+        let w = $('#width').val();
+        let h = $('#height').val();
+        let u = $('#units').val();
+        $('#x').val("");
+        $('#y').val("");
+        $('#width').val("");
+        $('#height').val("");
+        $('#units').val("");
+        e.preventDefault();
+        console.log('Item created with x:'+x+', y:'+y+', w:'+w+', h:'+h+', unit:'+u);
     });
         
 });

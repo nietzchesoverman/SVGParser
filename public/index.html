@@ -134,6 +134,118 @@
             <input type='submit' value="Edit Description" id="descEdit" class="btn btn-secondary float-right">
         </form>
     </div>
+    <br>
+    <br>
+    <h4>Scale Shapes</h4>
+    <div id="scaleShapes">
+        <table class="inputTable">
+            <thead>
+                <th>Shape</th>
+                <th>Scale Factor</th>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="otherAttributes">
+                        <select id="shapeScaleSelect">
+                            <option id="rectangleScale" value="0">Rectangles</option>
+                            <option id="circleScale" value="1">Circles</option>
+                        </select>
+                    </td>
+                    <td class="otherAttributes">
+                        <input id="scaleFactor" type="text" maxlength="256" class="smallTextField" value="">
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <form id="scaleShapeSubmit">
+            <input type='submit' value="Scale" id="scaleButton" class="btn btn-secondary float-right">
+        </form>
+    </div>
+    <br>
+    <br>
+    <hr>
+    <h2>Create SVG</h2>
+    <div id="createSVGDiv">
+        <table class="inputTable">
+            <thead>
+                <th>Title</th>
+                <th>Description</th>
+                <th>File name</th>
+            </thead>
+            <tbody>
+                <td>
+                    <input id="createTitleInput" type="text" maxlength="256" class="smallTextField" value=""> 
+                </td>
+                <td>
+                    <input id="createDescInput" type="text" maxlength="256" class="smallTextField" value=""> 
+                </td>
+                <td>
+                    <input id="createFileInput" type="text" maxlength="256" class="smallTextField" value=""> 
+                </td>
+            </tbody>
+        </table>
+    </div>
+    <form id="createSVGSubmit">
+        <input type='submit' value="Create SVG" id="createButton" class="btn btn-secondary float-right">
+    </form>
+    <br>
+    <br>
+    <h4>Add Shape</h4>
+    <select id="addShapeSVGSelect">
+        <option id="someSvg" value="0">NewFile</option>
+        <option id="otherSVG" value="1">Some other File</option>
+    </select>
+    <div id="addShapeDiv">
+        <table class="inputTable">
+            <thead>
+                <th>Shape</th>
+                <th>Shape Info</th>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="otherAttributes">
+                        <select id="shapeAddSelect">
+                            <option id="rectangleAdd" value="0">Rectangles</option>
+                            <option id="circleAdd" value="1">Circles</option>
+                        </select>
+                    </td>
+                    <td class="shapeTable">
+                        <table id="addShapeTable">
+                            <thead>
+                                <th>x</th>
+                                <th>y</th>
+                                <th>width</th>
+                                <th>height</th>
+                                <th>units</th>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <input id="x" type="text" maxlength="256" class="smallTextField" value="">
+                                    </td>
+                                    <td>
+                                        <input id="y" type="text" maxlength="256" class="smallTextField" value="">
+                                    </td>
+                                    <td>
+                                        <input id="width" type="text" maxlength="256" class="smallTextField" value="">
+                                    </td>
+                                    <td>
+                                        <input id="height" type="text" maxlength="256" class="smallTextField" value="">
+                                    </td>
+                                    <td>
+                                        <input id="units" type="text" maxlength="256" class="smallTextField" value="">
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <form id="scaleAddSubmit">
+            <input type='submit' value="Add Shape" id="addButton" class="btn btn-secondary float-right">
+        </form>
+    </div>
     
     <!------------
     <div id="blah">I am blah</div>
