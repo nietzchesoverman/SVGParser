@@ -167,6 +167,31 @@ app.get('/viewSVG', function(req , res){
   );
 });
 
+//switch SVG Viewport
+app.get('/switchSVG', function(req , res){
+  let svgFilePath = "uploads/"+req.query.inputFilePath;
+  let schema = 'parser/bin/svg.xsd';
+  let title = svgLib.getNameWrapper(svgFilePath, schema);
+  let desc = svgLib.getDescWrapper(svgFilePath, schema);
+  let rects = svgLib.rectViewWrapper(svgFilePath, schema);
+  let circs = svgLib.circViewWrapper(svgFilePath, schema);
+  let paths = svgLib.pathViewWrapper(svgFilePath, schema);
+  let group = svgLib.grpViewWrapper(svgFilePath, schema);
+
+ 
+  res.send(
+    {
+      imagePath: svgFilePath,
+      SVGTitle: title,
+      SVGDesc: desc,
+      SVGRects: rects,
+      SVGCircs: circs,
+      SVGPaths: paths,
+      SVGGrps: group
+    }
+  );
+});
+
 //Sample endpoint
 app.get('/endpoint1', function(req , res){
   let retStr = req.query.data1 + " " + req.query.data2;

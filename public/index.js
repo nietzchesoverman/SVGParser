@@ -88,6 +88,54 @@ jQuery(document).ready(function() {
                     optionIterator = optionIterator + 1;
                 });
                 console.log('selector value updated');
+                //Overlay the SVG View callback so that it comes after the selector is appropriately populated
+                $.ajax({
+                    type: 'get',
+                    datatype: 'json',
+                    url: 'viewSVG',
+                    success: function(currentSVGtoView){
+                        $('#title').text(currentSVGtoView.SVGTitle);
+                        $('#desc').text(currentSVGtoView.SVGDesc);
+                        $('#svgImageCell').append("<img src=\""+currentSVGtoView.imagePath+"\"/>");
+                        
+                        //rects
+                        let parsedComponent = JSON.parse(currentSVGtoView.SVGRects);
+                        let componentTypeIter = 1;
+                        for (let rect of parsedComponent){
+                            $('#componentBody').append("<tr><td class=\"componentDisplay\">Rectangle "+componentTypeIter+"</td><td class=\"componentDisplay\"><input type=\"text\" value=\"x="+rect.x+rect.units+", y="+rect.y+rect.units+", width="+rect.w+rect.units+", height="+rect.h+rect.units+"\"></td><td class=\"componentDisplay\">"+rect.numAttr+"</td></tr>");
+                            componentTypeIter = componentTypeIter + 1;
+                        }
+                        
+                        //circles
+                        parsedComponent = JSON.parse(currentSVGtoView.SVGCircs);
+                        componentTypeIter = 1;
+                        for (let circ of parsedComponent){
+                            $('#componentBody').append("<tr><td class=\"componentDisplay\">Circle "+componentTypeIter+"</td><td class=\"componentDisplay\"><input type=\"text\" value=\"cx= "+circ.cx+circ.units+", cy="+circ.cy+circ.units+", r="+circ.r+circ.units+"\"></td><td class=\"componentDisplay\">"+circ.numAttr+"</td></tr>");
+                            componentTypeIter = componentTypeIter + 1;
+                        }
+                        
+                        //paths
+                        parsedComponent = JSON.parse(currentSVGtoView.SVGPaths);
+                        componentTypeIter = 1;
+                        for (let path of parsedComponent){
+                            $('#componentBody').append("<tr><td class=\"componentDisplay\">Path "+componentTypeIter+"</td><td class=\"componentDisplay\"><input type=\"text\" value=\"d= "+path.d+"\"></td><td class=\"componentDisplay\">"+path.numAttr+"</td></tr>");
+                            componentTypeIter = componentTypeIter + 1;
+                        }
+
+                        //groups
+                        parsedComponent = JSON.parse(currentSVGtoView.SVGGrps);
+                        componentTypeIter = 1;
+                        for (let group of parsedComponent){
+                            $('#componentBody').append("<tr><td class=\"componentDisplay\">Group "+componentTypeIter+"</td><td class=\"componentDisplay\"><input type=\"text\" value=\"Children: "+group.children+"\"></td><td class=\"componentDisplay\">"+group.numAttr+"</td></tr>");
+                            componentTypeIter = componentTypeIter + 1;
+                        }
+
+                        console.log("Currently viewing "+currentSVGtoView.SVGTitle);
+                    },
+                    fail: function(err){
+                        console.log(err);
+                    }
+                });
             },
             fail: function(error){
                 console.log(error);
@@ -95,42 +143,59 @@ jQuery(document).ready(function() {
         });
     });
 
-    //Populate the initial SVG View- can then use the associated callback to switch b/t SVGs
-    $('#componentBody').html(function(e){
+    //Changing between selections
+    $('#fileDropDown').on('change', function(e){
         $.ajax({
             type: 'get',
             datatype: 'json',
-            url: 'viewSVG',
-            success: function(currentSVGtoView){
-                $('#title').text(currentSVGtoView.SVGTitle);
-                $('#desc').text(currentSVGtoView.SVGDesc);
-                $('#svgImageCell').append("<img src=\""+currentSVGtoView.imagePath+"\"/>");
-
-                let parsedComponent = JSON.parse(currentSVGtoView.SVGRects);
+            url: 'switchSVG',
+            data: {
+                inputFilePath: $('#fileDropDown').find("option:selected").text()
+            },
+            success: function(changeSVG){
+                $('#title').text(changeSVG.SVGTitle);
+                $('#desc').text(changeSVG.SVGDesc);
+                $('#svgImageCell').empty();
+                $('#svgImageCell').append("<img src=\""+changeSVG.imagePath+"\"/>");
+                
+                $('#componentBody').empty();
+                //rects
+                let parsedComponent = JSON.parse(changeSVG.SVGRects);
                 let componentTypeIter = 1;
                 for (let rect of parsedComponent){
                     $('#componentBody').append("<tr><td class=\"componentDisplay\">Rectangle "+componentTypeIter+"</td><td class=\"componentDisplay\"><input type=\"text\" value=\"x="+rect.x+rect.units+", y="+rect.y+rect.units+", width="+rect.w+rect.units+", height="+rect.h+rect.units+"\"></td><td class=\"componentDisplay\">"+rect.numAttr+"</td></tr>");
                     componentTypeIter = componentTypeIter + 1;
                 }
-
-                parsedComponent = JSON.parse(currentSVGtoView.SVGCircs);
+                
+                //circles
+                parsedComponent = JSON.parse(changeSVG.SVGCircs);
                 componentTypeIter = 1;
                 for (let circ of parsedComponent){
                     $('#componentBody').append("<tr><td class=\"componentDisplay\">Circle "+componentTypeIter+"</td><td class=\"componentDisplay\"><input type=\"text\" value=\"cx= "+circ.cx+circ.units+", cy="+circ.cy+circ.units+", r="+circ.r+circ.units+"\"></td><td class=\"componentDisplay\">"+circ.numAttr+"</td></tr>");
                     componentTypeIter = componentTypeIter + 1;
                 }
-                console.log("Currently viewing "+currentSVGtoView.SVGTitle);
+                
+                //paths
+                parsedComponent = JSON.parse(changeSVG.SVGPaths);
+                componentTypeIter = 1;
+                for (let path of parsedComponent){
+                    $('#componentBody').append("<tr><td class=\"componentDisplay\">Path "+componentTypeIter+"</td><td class=\"componentDisplay\"><input type=\"text\" value=\"d= "+path.d+"\"></td><td class=\"componentDisplay\">"+path.numAttr+"</td></tr>");
+                    componentTypeIter = componentTypeIter + 1;
+                }
+
+                //groups
+                parsedComponent = JSON.parse(changeSVG.SVGGrps);
+                componentTypeIter = 1;
+                for (let group of parsedComponent){
+                    $('#componentBody').append("<tr><td class=\"componentDisplay\">Group "+componentTypeIter+"</td><td class=\"componentDisplay\"><input type=\"text\" value=\"Children: "+group.children+"\"></td><td class=\"componentDisplay\">"+group.numAttr+"</td></tr>");
+                    componentTypeIter = componentTypeIter + 1;
+                }
+                console.log(changeSVG.imagePath);
             },
             fail: function(err){
                 console.log(err);
             }
         });
-    });
-
-    //Changing between selections
-    $('#fileDropDown').on('change', function(e){
-        $('#title').text("Title");
-        $('#desc').text("Description");
         console.log('SVG Changed');
     });
 
