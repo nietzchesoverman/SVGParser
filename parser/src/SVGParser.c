@@ -1048,3 +1048,59 @@ bool scaleCircs(const char* svgFilename, const char* schemaFile, float scaleFact
         return false;
     }
 }
+bool setAttributeWrapper(const char* svgFilename, const char* schemaFile, const char* elemntT, int iter, const char* attrName, const char* attrVal){
+    SVG* newSVG = createValidSVG(svgFilename, schemaFile);
+    Attribute* editAttr = malloc(sizeof(Attribute) + strlen(attrName) + strlen(attrVal) + 2);
+    editAttr->name = malloc(sizeof(char) * strlen(attrName) + 1);
+    strcpy(editAttr->name, attrName);
+    strcpy(editAttr->value, attrVal);
+
+    if (!strcmp(elemntT, "SVG")){
+        if(setAttribute(newSVG, SVG_IMG, iter - 1,editAttr)){
+            if(validateSVG(newSVG, schemaFile)){
+                writeSVG(newSVG, svgFilename);
+                free(newSVG);
+                return true;
+            }
+
+        }
+    }else if(!strcmp(elemntT, "Rectangle")){
+        if(setAttribute(newSVG, RECT, iter - 1,editAttr)){
+            if(validateSVG(newSVG, schemaFile)){
+                writeSVG(newSVG, svgFilename);
+                free(newSVG);
+                return true;
+            }
+
+        }
+    }else if(!strcmp(elemntT, "Circle")){
+        if(setAttribute(newSVG, CIRC, iter - 1,editAttr)){
+            if(validateSVG(newSVG, schemaFile)){
+                writeSVG(newSVG, svgFilename);
+                free(newSVG);
+                return true;
+            }
+
+        }
+    }else if(!strcmp(elemntT, "Path")){
+        if(setAttribute(newSVG, PATH, iter - 1,editAttr)){
+            if(validateSVG(newSVG, schemaFile)){
+                writeSVG(newSVG, svgFilename);
+                free(newSVG);
+                return true;
+            }
+
+        }
+    }else if(!strcmp(elemntT, "Group")){
+        if(setAttribute(newSVG, GROUP, iter - 1,editAttr)){
+            if(validateSVG(newSVG, schemaFile)){
+                writeSVG(newSVG, svgFilename);
+                free(newSVG);
+                return true;
+            }
+
+        }
+    }
+    free(newSVG);
+    return false;
+}

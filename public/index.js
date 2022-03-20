@@ -103,7 +103,7 @@ jQuery(document).ready(function() {
                         let parsedComponent = JSON.parse(currentSVGtoView.SVGRects);
                         let componentTypeIter = 1;
                         for (let rect of parsedComponent){
-                            $('#componentBody').append("<tr><td class=\"componentDisplay\">Rectangle "+componentTypeIter+"</td><td class=\"componentDisplay\"><input type=\"text\" value=\"x="+rect.x+rect.units+", y="+rect.y+rect.units+", width="+rect.w+rect.units+", height="+rect.h+rect.units+"\"></td><td class=\"componentDisplay\">"+rect.numAttr+"</td></tr>");
+                            $('#componentBody').append("<tr><td class=\"componentDisplay\">Rectangle "+componentTypeIter+"</td><td class=\"componentDisplay\"><h7>x="+rect.x+rect.units+", y="+rect.y+rect.units+", width="+rect.w+rect.units+", height="+rect.h+rect.units+"</h7></td><td class=\"componentDisplay\">"+rect.numAttr+"</td></tr>");
                             $('#attributeDropDown').append("<option>Rectangle "+componentTypeIter+"</option>");
                             componentTypeIter = componentTypeIter + 1;
                         }
@@ -112,7 +112,7 @@ jQuery(document).ready(function() {
                         parsedComponent = JSON.parse(currentSVGtoView.SVGCircs);
                         componentTypeIter = 1;
                         for (let circ of parsedComponent){
-                            $('#componentBody').append("<tr><td class=\"componentDisplay\">Circle "+componentTypeIter+"</td><td class=\"componentDisplay\"><input type=\"text\" value=\"cx= "+circ.cx+circ.units+", cy="+circ.cy+circ.units+", r="+circ.r+circ.units+"\"></td><td class=\"componentDisplay\">"+circ.numAttr+"</td></tr>");
+                            $('#componentBody').append("<tr><td class=\"componentDisplay\">Circle "+componentTypeIter+"</td><td class=\"componentDisplay\"><h7>cx="+circ.cx+circ.units+", cy="+circ.cy+circ.units+", r="+circ.r+circ.units+"</h7></td><td class=\"componentDisplay\">"+circ.numAttr+"</td></tr>");
                             $('#attributeDropDown').append("<option>Circle "+componentTypeIter+"</option>");
                             componentTypeIter = componentTypeIter + 1;
                         }
@@ -121,7 +121,7 @@ jQuery(document).ready(function() {
                         parsedComponent = JSON.parse(currentSVGtoView.SVGPaths);
                         componentTypeIter = 1;
                         for (let path of parsedComponent){
-                            $('#componentBody').append("<tr><td class=\"componentDisplay\">Path "+componentTypeIter+"</td><td class=\"componentDisplay\"><input type=\"text\" value=\"d= "+path.d+"\"></td><td class=\"componentDisplay\">"+path.numAttr+"</td></tr>");
+                            $('#componentBody').append("<tr><td class=\"componentDisplay\">Path "+componentTypeIter+"</td><td class=\"componentDisplay\"><h7>d="+path.d+"</h7></td><td class=\"componentDisplay\">"+path.numAttr+"</td></tr>");
                             $('#attributeDropDown').append("<option>Path "+componentTypeIter+"</option>");
                             componentTypeIter = componentTypeIter + 1;
                         }
@@ -130,7 +130,7 @@ jQuery(document).ready(function() {
                         parsedComponent = JSON.parse(currentSVGtoView.SVGGrps);
                         componentTypeIter = 1;
                         for (let group of parsedComponent){
-                            $('#componentBody').append("<tr><td class=\"componentDisplay\">Group "+componentTypeIter+"</td><td class=\"componentDisplay\"><input type=\"text\" value=\"Children: "+group.children+"\"></td><td class=\"componentDisplay\">"+group.numAttr+"</td></tr>");
+                            $('#componentBody').append("<tr><td class=\"componentDisplay\">Group "+componentTypeIter+"</td><td class=\"componentDisplay\"><h7>Children="+group.children+"</h7></td><td class=\"componentDisplay\">"+group.numAttr+"</td></tr>");
                             $('#attributeDropDown').append("<option>Group "+componentTypeIter+"</option>");
                             componentTypeIter = componentTypeIter + 1;
                         }
@@ -170,7 +170,7 @@ jQuery(document).ready(function() {
                 let parsedComponent = JSON.parse(changeSVG.SVGRects);
                 let componentTypeIter = 1;
                 for (let rect of parsedComponent){
-                    $('#componentBody').append("<tr><td class=\"componentDisplay\">Rectangle "+componentTypeIter+"</td><td class=\"componentDisplay\"><input type=\"text\" value=\"x="+rect.x+rect.units+", y="+rect.y+rect.units+", width="+rect.w+rect.units+", height="+rect.h+rect.units+"\"></td><td class=\"componentDisplay\">"+rect.numAttr+"</td></tr>");
+                    $('#componentBody').append("<tr><td class=\"componentDisplay\">Rectangle "+componentTypeIter+"</td><td class=\"componentDisplay\"><h7>x="+rect.x+rect.units+", y="+rect.y+rect.units+", width="+rect.w+rect.units+", height="+rect.h+rect.units+"</h7></td><td class=\"componentDisplay\">"+rect.numAttr+"</td></tr>");
                     $('#attributeDropDown').append("<option>Rectangle "+componentTypeIter+"</option>");
                     componentTypeIter = componentTypeIter + 1;
                 }
@@ -179,7 +179,7 @@ jQuery(document).ready(function() {
                 parsedComponent = JSON.parse(changeSVG.SVGCircs);
                 componentTypeIter = 1;
                 for (let circ of parsedComponent){
-                    $('#componentBody').append("<tr><td class=\"componentDisplay\">Circle "+componentTypeIter+"</td><td class=\"componentDisplay\"><input type=\"text\" value=\"cx= "+circ.cx+circ.units+", cy="+circ.cy+circ.units+", r="+circ.r+circ.units+"\"></td><td class=\"componentDisplay\">"+circ.numAttr+"</td></tr>");
+                    $('#componentBody').append("<tr><td class=\"componentDisplay\">Circle "+componentTypeIter+"</td><td class=\"componentDisplay\"><h7>cx="+circ.cx+circ.units+", cy="+circ.cy+circ.units+", r="+circ.r+circ.units+"</h7></td><td class=\"componentDisplay\">"+circ.numAttr+"</td></tr>");
                     $('#attributeDropDown').append("<option>Circle "+componentTypeIter+"</option>");
                     componentTypeIter = componentTypeIter + 1;
                 }
@@ -188,7 +188,7 @@ jQuery(document).ready(function() {
                 parsedComponent = JSON.parse(changeSVG.SVGPaths);
                 componentTypeIter = 1;
                 for (let path of parsedComponent){
-                    $('#componentBody').append("<tr><td class=\"componentDisplay\">Path "+componentTypeIter+"</td><td class=\"componentDisplay\"><input type=\"text\" value=\"d= "+path.d+"\"></td><td class=\"componentDisplay\">"+path.numAttr+"</td></tr>");
+                    $('#componentBody').append("<tr><td class=\"componentDisplay\">Path "+componentTypeIter+"</td><td class=\"componentDisplay\"><h7>d="+path.d+"</h7></td><td class=\"componentDisplay\">"+path.numAttr+"</td></tr>");
                     $('#attributeDropDown').append("<option>Path "+componentTypeIter+"</option>");
                     componentTypeIter = componentTypeIter + 1;
                 }
@@ -197,7 +197,7 @@ jQuery(document).ready(function() {
                 parsedComponent = JSON.parse(changeSVG.SVGGrps);
                 componentTypeIter = 1;
                 for (let group of parsedComponent){
-                    $('#componentBody').append("<tr><td class=\"componentDisplay\">Group "+componentTypeIter+"</td><td class=\"componentDisplay\"><input type=\"text\" value=\"Children: "+group.children+"\"></td><td class=\"componentDisplay\">"+group.numAttr+"</td></tr>");
+                    $('#componentBody').append("<tr><td class=\"componentDisplay\">Group "+componentTypeIter+"</td><td class=\"componentDisplay\"><h7>Children="+group.children+"</h7></td><td class=\"componentDisplay\">"+group.numAttr+"</td></tr>");
                     $('#attributeDropDown').append("<option>Group "+componentTypeIter+"</option>");
                     componentTypeIter = componentTypeIter + 1;
                 }
@@ -210,18 +210,30 @@ jQuery(document).ready(function() {
         console.log('SVG Changed');
     });
 
-    //Change Component Info
-    $('#updateComponent').submit(function(e){
-        $('#summary').val("Value was updated!");
-        e.preventDefault();
-        console.log('Components Updated')
-    });
-
     //Update attributes
     $('#updateAttr').submit(function(e){
-        $('#attrVal').val("attr has new value!");
         e.preventDefault();
-        console.log('Attribute value was updated!');
+        $.ajax({
+            type: 'get',
+            datatype: 'json',
+            url: 'updateAttr',
+            data:{
+                filePath: 'uploads/'+$('#fileDropDown').find("option:selected").text(),
+                componentType: $('#attributeDropDown').find("option:selected").text(),
+                changeVal: $('#attrVal').val()
+            },
+            success: function(updatedAttribute){
+                if (updatedAttribute.worked == true){
+                    location.reload();
+                    console.log('Attribute value was updated!');
+                }else{
+                    alert("INVALID ATTRIBUTE ENTERED - NO!");
+                }
+            },
+            fail: function(err){
+                console.log(err);
+            }
+        });
     });
         
     //Showing attributes
@@ -316,6 +328,7 @@ jQuery(document).ready(function() {
             success: function(scaledSVG){
                 if(scaledSVG.worked == true){
                     location.reload();
+                    console.log("elements scaled");
                 }else{
                     alert("SCALE RESULTED IN INVALID SVG- BAD TA NO DONT DO THAT");
                 }

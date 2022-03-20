@@ -420,6 +420,9 @@ void changeDesc(const char* svgFilename, const char* schemaFile, const char* des
 bool scaleRects(const char* svgFilename, const char* schemaFile, float scaleFactor);
 bool scaleCircs(const char* svgFilename, const char* schemaFile, float scaleFactor);
 
+//Attribute edit wrappers
+bool setAttributeWrapper(const char* svgFilename, const char* schemaFile, const char* elemntT, int iter, const char* attrName, const char* attrVal);
+
 /* ******************************* List helper functions  - MUST be implemented *************************** */
 
 void deleteAttribute( void* data);

@@ -89,7 +89,8 @@ let svgLib = ffi.Library('./libsvgparser',{
   'changeTitle': ['void',['string', 'string', 'string']],
   'changeDesc': ['void',['string', 'string', 'string']],
   'scaleRects': ['bool', ['string', 'string', 'float']],
-  'scaleCircs': ['bool', ['string', 'string', 'float']]
+  'scaleCircs': ['bool', ['string', 'string', 'float']],
+  'setAttributeWrapper': ['bool', ['string', 'string', 'string', 'int', 'string', 'string']]
 });
 
 function extension(fileName){
@@ -287,6 +288,24 @@ app.get('/scaleShape', function(req , res){
   res.send(
     {
       worked: ret
+    }
+  );
+});
+
+//Update Attribute
+app.get('/updateAttr', function(req , res){
+  let svgFilePath = req.query.filePath;
+  let schema = 'parser/bin/svg.xsd';
+  let retStr = "";
+  let svgComponentType = req.query.componentType;
+  const componentList = svgComponentType.split(" ");
+  const nameValuePair = req.query.changeVal.split(": ");
+
+  retStr = svgLib.setAttributeWrapper(svgFilePath, schema, componentList[0], parseInt(componentList[1]), nameValuePair[0], nameValuePair[1]);
+ 
+  res.send(
+    {
+      worked: retStr
     }
   );
 });
