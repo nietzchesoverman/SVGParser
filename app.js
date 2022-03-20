@@ -73,7 +73,8 @@ app.get('/uploads/:name', function(req , res){
 
 //Setup the library
 let svgLib = ffi.Library('./libsvgparser',{
-  'SVGCreationWrapper': ['string', ['string', 'string']]
+  'SVGCreationWrapper': ['string', ['string', 'string']],
+  'validateSVGWrapper': ['bool', ['string', 'string']]
 });
 
 //File log event handler on page refresh babyeeee
@@ -84,18 +85,23 @@ app.get('/populateFileLog', function(req , res){
   const retPaths = [];
   const hrefList = [];
   const fileSizes = [];
+  const invalidFiles = [];
 
   fileArray.forEach(function(file){
-    let stats = fs.statSync('uploads/'+file);
-    svgJson = svgLib.SVGCreationWrapper('uploads/'+file, 'parser/bin/svg.xsd');
-    if (retStr.localeCompare("") == 0){
-      retStr = "["+svgJson;
+    if (svgLib.validateSVGWrapper('uploads/'+file, 'parser/bin/svg.xsd')){
+      let stats = fs.statSync('uploads/'+file);
+      svgJson = svgLib.SVGCreationWrapper('uploads/'+file, 'parser/bin/svg.xsd');
+      if (retStr.localeCompare("") == 0){
+        retStr = "["+svgJson;
+      }else{
+        retStr = retStr+","+svgJson;
+      }
+      retPaths.push("uploads/"+file);
+      hrefList.push(file);
+      fileSizes.push(Math.round(stats.size / 1024));
     }else{
-      retStr = retStr+","+svgJson;
+      invalidFiles.push(file);
     }
-    retPaths.push("uploads/"+file);
-    hrefList.push(file);
-    fileSizes.push(Math.round(stats.size / 1024));
   });
 
   retStr = retStr+"]";
@@ -105,7 +111,26 @@ app.get('/populateFileLog', function(req , res){
       svgString: retStr,
       picturePaths: retPaths,
       pictureDLs: hrefList,
-      sizes: fileSizes
+      sizes: fileSizes,
+      invalid: invalidFiles
+    }
+  );
+});
+
+//Populate Selectors
+app.get('/populateSelector', function(req , res){
+  let files = fs.readdirSync('./uploads');
+  const fileArray = [];
+
+  files.forEach(function(file){
+    if (svgLib.validateSVGWrapper('uploads/'+file, 'parser/bin/svg.xsd')){
+      fileArray.push(file);
+    }
+  });
+ 
+  res.send(
+    {
+      validFiles: fileArray
     }
   );
 });
