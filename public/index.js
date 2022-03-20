@@ -57,19 +57,42 @@ jQuery(document).ready(function() {
                     $('#svgRow').append("<tr><td><a href=\""+printLog.pictureDLs[i]+"\" download><img class=\"svgFileImg\" src=\""+printLog.picturePaths[i]+"\"/></a></td><td><a href=\""+printLog.pictureDLs[i]+"\" download>"+printLog.pictureDLs[i]+"</a></td><td>"+printLog.sizes[i]+"kb</td><td>"+svg.numRect+"</td><td>"+svg.numCirc+"</td><td>"+svg.numPaths+"</td><td>"+svg.numGroups+"</td></tr>");
                     i = i+1;
                 }
+                printLog.invalid.forEach(function(invalidFile){
+                    alert("SVG File with name: "+invalidFile+" is invalid.");
+                });
+                console.log('Uploaded SVGs have been loaded');
             },
             fail: function(error){
                 $('#svgRow').html("No files: Please upload an SVG");
                 console.log(error);
             }
         });
-        console.log('Uploaded SVGs have been loaded');
     });
 
     //populate the dropdown selectors based off current SVGs
-    $('#firstOne').html(function(e){
-        $('#firstOne').html("Updated Selector Value");
-        console.log('selector value updated');
+    $('#fileDropDown').html(function(e){
+        $.ajax({
+            type: 'get',
+            datatype: 'json',
+            url: 'populateSelector',
+            success: function(svgFiles){
+                if(svgFiles.validFiles.length == 0){
+                    $('#fileDropDown').append("<option></option>");
+                    return;
+                }else{
+                    $('#fileDropDown').innerHTML = "";
+                }
+                let optionIterator = 0;
+                svgFiles.validFiles.forEach(function(file){
+                    $('#fileDropDown').append("<option value=\""+optionIterator+"\">"+file+"</option>");
+                    optionIterator = optionIterator + 1;
+                });
+                console.log('selector value updated');
+            },
+            fail: function(error){
+                console.log(error);
+            }
+        });
     });
 
     //Changing between selections

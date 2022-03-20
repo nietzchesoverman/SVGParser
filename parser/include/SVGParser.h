@@ -395,6 +395,8 @@ Circle* JSONtoCircle(const char* svgString);
 /* ******************************* Stitchy Functions for A3 *************************** */
 char* SVGCreationWrapper(const char* svgFilename, const char* schemaFile);
 
+bool validateSVGWrapper(const char* svgFilename, const char* schemaFile);
+
 /* ******************************* List helper functions  - MUST be implemented *************************** */
 
 void deleteAttribute( void* data);

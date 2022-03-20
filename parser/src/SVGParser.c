@@ -882,3 +882,10 @@ char* SVGCreationWrapper(const char* svgFilename, const char* schemaFile){
     free(newSVG);
     return svgJSON;
 }
+
+bool validateSVGWrapper(const char* svgFilename, const char* schemaFile){
+    SVG* newSVG = createSVG(svgFilename);
+    bool isValidSVG = validateSVG(newSVG, schemaFile);
+    free(newSVG);
+    return isValidSVG;
+}

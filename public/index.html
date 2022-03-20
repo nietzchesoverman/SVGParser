@@ -18,8 +18,8 @@
 </head>
 <body>
     <h2 id="flogText">File Log</h2>
-    <div id='fileLogDiv'>
-        <table class="fileLogClass">
+    <div id='fileLogDiv' class="fileLogHead">
+        <table>
             <thead>
                 <tr>
                     <th>Image<br>(click to download)</th>
@@ -31,8 +31,10 @@
                     <th>Number of Groups</th>
                 </tr>
             </thead>
-            <tbody id="svgRow">
-            </tbody>
+            <div id='fileLogBody'>
+                <tbody id="svgRow">
+                </tbody>
+            </div>
         </table>
     </div>
     <form ref='uploadForm'
@@ -50,8 +52,6 @@
 
     <h2>SVG View</h2>
     <select id="fileDropDown">
-        <option id="firstOne" value="0">NewFile</option>
-        <option id="secondOne" value="1">Some other File</option>
     </select>
     <h4 id="title" class="viewMeta">Title</h4>
     <h6 id="desc" class="viewMeta">Description</h6>

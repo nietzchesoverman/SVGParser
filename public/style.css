@@ -24,6 +24,13 @@ input[type=submit], button {
     cursor: pointer;
     cursor: hand;
 }
+.fileLogHead thead tr th{
+    padding: 8px 15px;
+    background: white;
+    border: 1px solid black;
+    position: sticky;
+    top: 0;
+}
 #fileLogDiv{
     max-height: 600px;
     overflow: auto;
@@ -32,6 +39,7 @@ input[type=submit], button {
 table{
     max-height: 600px;
     border: 1px solid black;
+    border-collapse: collapse;
     text-align: center;
 }
 tbody{
