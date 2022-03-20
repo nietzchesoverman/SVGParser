@@ -998,3 +998,15 @@ char* getGrpAttributeWrapper(const char* svgFilename, const char* schemaFile, in
     free(newSVG);
     return attributes;
 }
+void changeTitle(const char* svgFilename, const char* schemaFile, const char* title){
+    SVG* newSVG = createValidSVG(svgFilename, schemaFile);
+    strcpy(newSVG->title, title);
+    writeSVG(newSVG, svgFilename);
+    free(newSVG);
+}
+void changeDesc(const char* svgFilename, const char* schemaFile, const char* desc){
+    SVG* newSVG = createValidSVG(svgFilename, schemaFile);
+    strcpy(newSVG->description, desc);
+    writeSVG(newSVG, svgFilename);
+    free(newSVG);
+}

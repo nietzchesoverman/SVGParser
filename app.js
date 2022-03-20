@@ -85,7 +85,9 @@ let svgLib = ffi.Library('./libsvgparser',{
   'getRectAttributeWrapper': ['string',['string', 'string', 'int']],
   'getCircAttributeWrapper': ['string',['string', 'string', 'int']],
   'getPathAttributeWrapper': ['string',['string', 'string', 'int']],
-  'getGrpAttributeWrapper': ['string',['string', 'string', 'int']]
+  'getGrpAttributeWrapper': ['string',['string', 'string', 'int']],
+  'changeTitle': ['void',['string', 'string', 'string']],
+  'changeDesc': ['void',['string', 'string', 'string']]
 });
 
 //File log event handler on page refresh babyeeee
@@ -225,6 +227,36 @@ app.get('/showAttr', function(req , res){
   res.send(
     {
       otherAttributes: retStr
+    }
+  );
+});
+
+//Change Title
+app.get('/changeTitle', function(req , res){
+  let filePath = req.query.svgPath;
+  let schema = 'parser/bin/svg.xsd';
+  let changedTitle = req.query.newTitle;
+
+  svgLib.changeTitle(filePath, schema, changedTitle);
+ 
+  res.send(
+    {
+      somethingElse: changedTitle
+    }
+  );
+});
+
+//Change Description
+app.get('/changeDescription', function(req , res){
+  let filePath = req.query.svgPath;
+  let schema = 'parser/bin/svg.xsd';
+  let changedDesc = req.query.newDesc;
+
+  svgLib.changeDesc(filePath, schema, changedDesc);
+ 
+  res.send(
+    {
+      somethingElse: changedDesc
     }
   );
 });

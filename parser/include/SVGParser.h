@@ -412,6 +412,10 @@ char* getCircAttributeWrapper(const char* svgFilename, const char* schemaFile, i
 char* getPathAttributeWrapper(const char* svgFilename, const char* schemaFile, int iter);
 char* getGrpAttributeWrapper(const char* svgFilename, const char* schemaFile, int iter);
 
+//Title&Description Setting
+void changeTitle(const char* svgFilename, const char* schemaFile, const char* title);
+void changeDesc(const char* svgFilename, const char* schemaFile, const char* desc);
+
 /* ******************************* List helper functions  - MUST be implemented *************************** */
 
 void deleteAttribute( void* data);

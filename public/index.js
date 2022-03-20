@@ -261,16 +261,44 @@ jQuery(document).ready(function() {
 
     //Editing Title
     $('#editTitle').submit(function(e){
-        $('#title').text($('#titleDescInput').val());
         e.preventDefault();
-        console.log('Title Updated');
+        $.ajax({
+            type: 'get',
+            datatype: 'json',
+            url: 'changeTitle',
+            data: {
+                svgPath: 'uploads/'+$('#fileDropDown').find("option:selected").text(),
+                newTitle: $('#titleDescInput').val()
+            },
+            success: function(titleChange){
+                $('#title').text($('#titleDescInput').val());
+                console.log('Title Updated');
+            },
+            fail: function(err){
+                console.log(err);
+            }
+        });
     });
 
     //Editing Description
     $('#editDesc').submit(function(e){
-        $('#desc').text($('#titleDescInput').val());
         e.preventDefault();
-        console.log("Description Updated");
+        $.ajax({
+            type: 'get',
+            datatype: 'json',
+            url: 'changeDescription',
+            data: {
+                svgPath: 'uploads/'+$('#fileDropDown').find("option:selected").text(),
+                newDesc: $('#titleDescInput').val()
+            },
+            success: function(descChange){
+                $('#desc').text($('#titleDescInput').val());
+                console.log("Description Updated");
+            },
+            fail: function(err){
+                console.log(err);
+            }
+        });
     });
 
     //Scaling Shapes
