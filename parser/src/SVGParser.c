@@ -1010,3 +1010,41 @@ void changeDesc(const char* svgFilename, const char* schemaFile, const char* des
     writeSVG(newSVG, svgFilename);
     free(newSVG);
 }
+bool scaleRects(const char* svgFilename, const char* schemaFile, float scaleFactor){
+    SVG* newSVG = createValidSVG(svgFilename, schemaFile);
+    List* rectsList = getRects(newSVG);
+    ListIterator i = createIterator(rectsList);
+    Rectangle* element;
+    while((element = (Rectangle*)nextElement(&i))!= NULL){      //scale these bad boys
+        element->width = element->width*scaleFactor;
+        element->height = element->height*scaleFactor;
+    }
+
+    if (validateSVG(newSVG, schemaFile)){
+        writeSVG(newSVG, svgFilename);
+        free(newSVG);
+        return true;
+    }else{
+        free(newSVG);
+        return false;
+    }
+
+}
+bool scaleCircs(const char* svgFilename, const char* schemaFile, float scaleFactor){
+    SVG* newSVG = createValidSVG(svgFilename, schemaFile);
+    List* circList = getCircles(newSVG);
+    ListIterator i = createIterator(circList);
+    Circle* element;
+    while((element = (Circle*)nextElement(&i))!= NULL){      //scale these bad boys
+        element->r = element->r*scaleFactor;
+    }
+
+    if (validateSVG(newSVG, schemaFile)){
+        writeSVG(newSVG, svgFilename);
+        free(newSVG);
+        return true;
+    }else{
+        free(newSVG);
+        return false;
+    }
+}

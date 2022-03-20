@@ -303,10 +303,27 @@ jQuery(document).ready(function() {
 
     //Scaling Shapes
     $('#scaleShapeSubmit').submit(function(e){
-        let newVal = $('#scaleFactor').val();
-        $('#scaleFactor').val("");
         e.preventDefault();
-        console.log($('#shapeScaleSelect').val()+" has been scaled by "+newVal);
+        $.ajax({
+            type: 'get',
+            datatype: 'json',
+            url: 'scaleShape',
+            data:{
+                svgFilePath: 'uploads/'+$('#fileDropDown').find("option:selected").text(),
+                rectOrCirc: $('#shapeScaleSelect').find("option:selected").text(),
+                scaleFactor: $('#scaleFactor').val()
+            },
+            success: function(scaledSVG){
+                if(scaledSVG.worked == true){
+                    location.reload();
+                }else{
+                    alert("SCALE RESULTED IN INVALID IMAGE- BAD TA NO DONT DO THAT");
+                }
+            },
+            fail: function(err){
+                console.log(err);
+            }
+        });
     });
 
     //Create SVG

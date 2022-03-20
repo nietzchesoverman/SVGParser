@@ -87,7 +87,9 @@ let svgLib = ffi.Library('./libsvgparser',{
   'getPathAttributeWrapper': ['string',['string', 'string', 'int']],
   'getGrpAttributeWrapper': ['string',['string', 'string', 'int']],
   'changeTitle': ['void',['string', 'string', 'string']],
-  'changeDesc': ['void',['string', 'string', 'string']]
+  'changeDesc': ['void',['string', 'string', 'string']],
+  'scaleRects': ['bool', ['string', 'string', 'float']],
+  'scaleCircs': ['bool', ['string', 'string', 'float']]
 });
 
 //File log event handler on page refresh babyeeee
@@ -257,6 +259,30 @@ app.get('/changeDescription', function(req , res){
   res.send(
     {
       somethingElse: changedDesc
+    }
+  );
+});
+
+//Scale Shape
+//Sample endpoint
+app.get('/scaleShape', function(req , res){
+  let filePath = req.query.svgFilePath;
+  let schema = 'parser/bin/svg.xsd';
+  let shapeType = req.query.rectOrCirc;
+  let scaleFact = parseFloat(req.query.scaleFactor);
+  let ret = false;
+
+  if (shapeType.localeCompare("Rectangles") == 0){
+    //Rectangle callback with Scale Fact
+    ret = svgLib.scaleRects(filePath, schema, scaleFact);
+  }else{
+    //Circle callback with Scale fact
+    ret = svgLib.scaleCircs(filePath, schema, scaleFact);
+  }
+ 
+  res.send(
+    {
+      worked: ret
     }
   );
 });

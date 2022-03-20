@@ -416,6 +416,10 @@ char* getGrpAttributeWrapper(const char* svgFilename, const char* schemaFile, in
 void changeTitle(const char* svgFilename, const char* schemaFile, const char* title);
 void changeDesc(const char* svgFilename, const char* schemaFile, const char* desc);
 
+//Scale rects or circs
+bool scaleRects(const char* svgFilename, const char* schemaFile, float scaleFactor);
+bool scaleCircs(const char* svgFilename, const char* schemaFile, float scaleFactor);
+
 /* ******************************* List helper functions  - MUST be implemented *************************** */
 
 void deleteAttribute( void* data);
