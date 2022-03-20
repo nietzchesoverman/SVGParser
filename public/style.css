@@ -27,6 +27,7 @@ input[type=submit], button {
 #fileLogDiv{
     max-height: 600px;
     overflow: auto;
+    table-layout: fixed;
 }
 table{
     max-height: 600px;
@@ -95,6 +96,7 @@ td{
 }
 #svgRow{
     width: 100%;
+    overflow: auto;
 }
 #descEdit{
     margin-right: 2%;
@@ -109,6 +111,10 @@ td{
 .shapeTable{
     border: none;
     width: 100%;
+}
+.svgFileImg{
+    max-width: 100%;
+    max-height: 100%;
 }
 
 @media(max-width: 900px) {

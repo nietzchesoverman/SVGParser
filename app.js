@@ -76,12 +76,36 @@ let svgLib = ffi.Library('./libsvgparser',{
   'SVGCreationWrapper': ['string', ['string', 'string']]
 });
 
+//File log event handler on page refresh babyeeee
 app.get('/populateFileLog', function(req , res){
-  let retStr = svgLib.SVGCreationWrapper('uploads/Emoji_poo.svg', 'parser/bin/svg.xsd');
-  
+  let retStr = "";
+  let svgJson = "";
+  let fileArray = fs.readdirSync('./uploads');
+  const retPaths = [];
+  const hrefList = [];
+  const fileSizes = [];
+
+  fileArray.forEach(function(file){
+    let stats = fs.statSync('uploads/'+file);
+    svgJson = svgLib.SVGCreationWrapper('uploads/'+file, 'parser/bin/svg.xsd');
+    if (retStr.localeCompare("") == 0){
+      retStr = "["+svgJson;
+    }else{
+      retStr = retStr+","+svgJson;
+    }
+    retPaths.push("uploads/"+file);
+    hrefList.push(file);
+    fileSizes.push(Math.round(stats.size / 1024));
+  });
+
+  retStr = retStr+"]";
+
   res.send(
     {
-      svgString: retStr
+      svgString: retStr,
+      picturePaths: retPaths,
+      pictureDLs: hrefList,
+      sizes: fileSizes
     }
   );
 });

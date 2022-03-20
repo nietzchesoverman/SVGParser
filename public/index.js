@@ -45,8 +45,18 @@ jQuery(document).ready(function() {
             dataType: 'json',
             url: 'populateFileLog',
             success: function(printLog){
-                let parsedString = JSON.parse(printLog.svgString);
-                console.log('we got it! '+parsedString.numPaths);
+                if (printLog.picturePaths.length == 0){
+                    $('#flogText').html("File Log Currently Empty - Please Upload an SVG");
+                    return;
+                }else{
+                    $('#flogText').html("File Log");
+                }
+                let i = 0;
+                parsedSVGs = JSON.parse(printLog.svgString);
+                for(let svg of parsedSVGs){
+                    $('#svgRow').append("<tr><td><a href=\""+printLog.pictureDLs[i]+"\" download><img class=\"svgFileImg\" src=\""+printLog.picturePaths[i]+"\"/></a></td><td><a href=\""+printLog.pictureDLs[i]+"\" download>"+printLog.pictureDLs[i]+"</a></td><td>"+printLog.sizes[i]+"kb</td><td>"+svg.numRect+"</td><td>"+svg.numCirc+"</td><td>"+svg.numPaths+"</td><td>"+svg.numGroups+"</td></tr>");
+                    i = i+1;
+                }
             },
             fail: function(error){
                 $('#svgRow').html("No files: Please upload an SVG");
