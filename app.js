@@ -92,6 +92,10 @@ let svgLib = ffi.Library('./libsvgparser',{
   'scaleCircs': ['bool', ['string', 'string', 'float']]
 });
 
+function extension(fileName){
+  let ext = path.extname(fileName);
+  return ext === ".svg";
+};
 //File log event handler on page refresh babyeeee
 app.get('/populateFileLog', function(req , res){
   let retStr = "";
@@ -102,7 +106,7 @@ app.get('/populateFileLog', function(req , res){
   const fileSizes = [];
   const invalidFiles = [];
 
-  fileArray.forEach(function(file){
+  fileArray.filter(extension).forEach(function(file){
     if (svgLib.validateSVGWrapper('uploads/'+file, 'parser/bin/svg.xsd')){
       let stats = fs.statSync('uploads/'+file);
       svgJson = svgLib.SVGCreationWrapper('uploads/'+file, 'parser/bin/svg.xsd');
@@ -137,7 +141,7 @@ app.get('/populateSelector', function(req , res){
   let files = fs.readdirSync('./uploads');
   const fileArray = [];
 
-  files.forEach(function(file){
+  files.filter(extension).forEach(function(file){
     if (svgLib.validateSVGWrapper('uploads/'+file, 'parser/bin/svg.xsd')){
       fileArray.push(file);
     }
@@ -152,7 +156,7 @@ app.get('/populateSelector', function(req , res){
 
 //SVG viewport extravaganza
 app.get('/viewSVG', function(req , res){
-  let svgFiles = fs.readdirSync('./uploads');
+  let svgFiles = fs.readdirSync('./uploads').filter(extension);
   let svgFilePath = "uploads/"+svgFiles[0];
   let schema = 'parser/bin/svg.xsd';
   let title = svgLib.getNameWrapper(svgFilePath, schema);

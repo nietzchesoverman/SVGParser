@@ -317,7 +317,7 @@ jQuery(document).ready(function() {
                 if(scaledSVG.worked == true){
                     location.reload();
                 }else{
-                    alert("SCALE RESULTED IN INVALID IMAGE- BAD TA NO DONT DO THAT");
+                    alert("SCALE RESULTED IN INVALID SVG- BAD TA NO DONT DO THAT");
                 }
             },
             fail: function(err){
