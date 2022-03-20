@@ -135,6 +135,9 @@ td{
     width: 800px;
     height: auto;
 }
+#attrVal{
+    width:100%;
+}
 @media(max-width: 900px) {
     html {
         font-size: 14px !important;

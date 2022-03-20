@@ -80,7 +80,12 @@ let svgLib = ffi.Library('./libsvgparser',{
   'pathViewWrapper': ['string',['string', 'string']],
   'grpViewWrapper': ['string',['string', 'string']],
   'getNameWrapper': ['string',['string', 'string']],
-  'getDescWrapper': ['string',['string', 'string']]
+  'getDescWrapper': ['string',['string', 'string']],
+  'getSVGAttributeWrapper': ['string',['string', 'string']],
+  'getRectAttributeWrapper': ['string',['string', 'string', 'int']],
+  'getCircAttributeWrapper': ['string',['string', 'string', 'int']],
+  'getPathAttributeWrapper': ['string',['string', 'string', 'int']],
+  'getGrpAttributeWrapper': ['string',['string', 'string', 'int']]
 });
 
 //File log event handler on page refresh babyeeee
@@ -188,6 +193,38 @@ app.get('/switchSVG', function(req , res){
       SVGCircs: circs,
       SVGPaths: paths,
       SVGGrps: group
+    }
+  );
+});
+
+//Show Attributes
+app.get('/showAttr', function(req , res){
+  let svgFilePath = req.query.filePath;
+  let schema = 'parser/bin/svg.xsd';
+  let retStr = "";
+  let svgComponentType = req.query.componentType;
+  const componentList = svgComponentType.split(" ");
+
+  if (componentList[0].localeCompare("SVG") == 0){
+    //SVG otherAttributes JSON Callback C function
+    retStr = svgLib.getSVGAttributeWrapper(svgFilePath, schema);
+  }else if(componentList[0].localeCompare("Rectangle") == 0){
+    //Rectangles otherAttributes Callback- with componentList[1] as iter
+    retStr = svgLib.getRectAttributeWrapper(svgFilePath, schema, parseInt(componentList[1]));
+  }else if(componentList[0].localeCompare("Circle") == 0){
+    //Circles otherAttributes Callback- with componentList[1] as iter
+    retStr = svgLib.getCircAttributeWrapper(svgFilePath, schema, parseInt(componentList[1]));
+  }else if(componentList[0].localeCompare("Path") == 0){
+    //Paths otherAttributes Callback- with componentList[1] as iter
+    retStr = svgLib.getPathAttributeWrapper(svgFilePath, schema, parseInt(componentList[1]));
+  }else if(componentList[0].localeCompare("Group") == 0){
+    //Groups otherAttributes Callback- with componentList[1] as iter
+    retStr = svgLib.getGrpAttributeWrapper(svgFilePath, schema, parseInt(componentList[1]));
+  }
+ 
+  res.send(
+    {
+      otherAttributes: retStr
     }
   );
 });

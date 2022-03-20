@@ -405,6 +405,13 @@ char* grpViewWrapper(const char* svgFilename, const char* schemaFile);
 char* getNameWrapper(const char* svgFilename, const char* schemaFile);
 char* getDescWrapper(const char* svgFilename, const char* schemaFile);
 
+//AttributeViewWrappers
+char* getSVGAttributeWrapper(const char* svgFilename, const char* schemaFile);
+char* getRectAttributeWrapper(const char* svgFilename, const char* schemaFile, int iter);
+char* getCircAttributeWrapper(const char* svgFilename, const char* schemaFile, int iter);
+char* getPathAttributeWrapper(const char* svgFilename, const char* schemaFile, int iter);
+char* getGrpAttributeWrapper(const char* svgFilename, const char* schemaFile, int iter);
+
 /* ******************************* List helper functions  - MUST be implemented *************************** */
 
 void deleteAttribute( void* data);

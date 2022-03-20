@@ -932,3 +932,69 @@ char* getDescWrapper(const char* svgFilename, const char* schemaFile){
     free(newSVG);
     return desc;
 }
+char* getSVGAttributeWrapper(const char* svgFilename, const char* schemaFile){
+    SVG* newSVG = createValidSVG(svgFilename, schemaFile);
+    char* attributes = attrListToJSON(newSVG->otherAttributes);
+    free(newSVG);
+    return attributes;
+}
+char* getRectAttributeWrapper(const char* svgFilename, const char* schemaFile, int iter){
+    SVG* newSVG = createValidSVG(svgFilename, schemaFile);
+    char* attributes;
+    int k = 1;
+    ListIterator i = createIterator(newSVG->rectangles);
+    Rectangle* element;
+    while ((element = (Rectangle*)nextElement(&i))!= NULL){
+        if (k == iter){
+            attributes = attrListToJSON(element->otherAttributes);
+        }
+        k++;
+    }
+    free(newSVG);
+    return attributes;
+}
+char* getCircAttributeWrapper(const char* svgFilename, const char* schemaFile, int iter){
+    SVG* newSVG = createValidSVG(svgFilename, schemaFile);
+    char* attributes;
+    int k = 1;
+    ListIterator i = createIterator(newSVG->circles);
+    Circle* element;
+    while ((element = (Circle*)nextElement(&i))!= NULL){
+        if (k == iter){
+            attributes = attrListToJSON(element->otherAttributes);
+        }
+        k++;
+    }
+    free(newSVG);
+    return attributes;
+}
+char* getPathAttributeWrapper(const char* svgFilename, const char* schemaFile, int iter){
+    SVG* newSVG = createValidSVG(svgFilename, schemaFile);
+    char* attributes;
+    int k = 1;
+    ListIterator i = createIterator(newSVG->paths);
+    Path* element;
+    while ((element = (Path*)nextElement(&i))!= NULL){
+        if (k == iter){
+            attributes = attrListToJSON(element->otherAttributes);
+        }
+        k++;
+    }
+    free(newSVG);
+    return attributes;
+}
+char* getGrpAttributeWrapper(const char* svgFilename, const char* schemaFile, int iter){
+    SVG* newSVG = createValidSVG(svgFilename, schemaFile);
+    char* attributes;
+    int k = 1;
+    ListIterator i = createIterator(newSVG->groups);
+    Group* element;
+    while ((element = (Group*)nextElement(&i))!= NULL){
+        if (k == iter){
+            attributes = attrListToJSON(element->otherAttributes);
+        }
+        k++;
+    }
+    free(newSVG);
+    return attributes;
+}
