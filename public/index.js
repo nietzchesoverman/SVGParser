@@ -69,7 +69,7 @@ jQuery(document).ready(function() {
         });
     });
 
-    //populate the dropdown selectors based off current SVGs
+    //populate the dropdown selectors based off current SVGs 
     $('#fileDropDown').html(function(e){
         $.ajax({
             type: 'get',
@@ -91,6 +91,38 @@ jQuery(document).ready(function() {
             },
             fail: function(error){
                 console.log(error);
+            }
+        });
+    });
+
+    //Populate the initial SVG View- can then use the associated callback to switch b/t SVGs
+    $('#componentBody').html(function(e){
+        $.ajax({
+            type: 'get',
+            datatype: 'json',
+            url: 'viewSVG',
+            success: function(currentSVGtoView){
+                $('#title').text(currentSVGtoView.SVGTitle);
+                $('#desc').text(currentSVGtoView.SVGDesc);
+                $('#svgImageCell').append("<img src=\""+currentSVGtoView.imagePath+"\"/>");
+
+                let parsedComponent = JSON.parse(currentSVGtoView.SVGRects);
+                let componentTypeIter = 1;
+                for (let rect of parsedComponent){
+                    $('#componentBody').append("<tr><td class=\"componentDisplay\">Rectangle "+componentTypeIter+"</td><td class=\"componentDisplay\"><input type=\"text\" value=\"x="+rect.x+rect.units+", y="+rect.y+rect.units+", width="+rect.w+rect.units+", height="+rect.h+rect.units+"\"></td><td class=\"componentDisplay\">"+rect.numAttr+"</td></tr>");
+                    componentTypeIter = componentTypeIter + 1;
+                }
+
+                parsedComponent = JSON.parse(currentSVGtoView.SVGCircs);
+                componentTypeIter = 1;
+                for (let circ of parsedComponent){
+                    $('#componentBody').append("<tr><td class=\"componentDisplay\">Circle "+componentTypeIter+"</td><td class=\"componentDisplay\"><input type=\"text\" value=\"cx= "+circ.cx+circ.units+", cy="+circ.cy+circ.units+", r="+circ.r+circ.units+"\"></td><td class=\"componentDisplay\">"+circ.numAttr+"</td></tr>");
+                    componentTypeIter = componentTypeIter + 1;
+                }
+                console.log("Currently viewing "+currentSVGtoView.SVGTitle);
+            },
+            fail: function(err){
+                console.log(err);
             }
         });
     });

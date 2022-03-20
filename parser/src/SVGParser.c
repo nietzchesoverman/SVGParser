@@ -889,3 +889,46 @@ bool validateSVGWrapper(const char* svgFilename, const char* schemaFile){
     free(newSVG);
     return isValidSVG;
 }
+
+char* rectViewWrapper(const char* svgFilename, const char* schemaFile){
+    SVG* newSVG = createValidSVG(svgFilename, schemaFile);
+    char* rectJSON = rectListToJSON(newSVG->rectangles);
+    free(newSVG);
+    return rectJSON;
+
+}
+
+char* circViewWrapper(const char* svgFilename, const char* schemaFile){
+    SVG* newSVG = createValidSVG(svgFilename, schemaFile);
+    char* circJSON = circListToJSON(newSVG->circles);
+    free(newSVG);
+    return circJSON;
+}
+
+char* pathViewWrapper(const char* svgFilename, const char* schemaFile){
+    SVG* newSVG = createValidSVG(svgFilename, schemaFile);
+    char* pathJSON = pathListToJSON(newSVG->paths);
+    free(newSVG);
+    return pathJSON;
+}
+
+char* grpViewWrapper(const char* svgFilename, const char* schemaFile){
+    SVG* newSVG = createValidSVG(svgFilename, schemaFile);
+    char* grpJSON = groupListToJSON(newSVG->groups);
+    free(newSVG);
+    return grpJSON;
+}
+char* getNameWrapper(const char* svgFilename, const char* schemaFile){
+    SVG* newSVG = createValidSVG(svgFilename, schemaFile);
+    char* name = malloc(sizeof(char)* strlen(newSVG->title) + 1);
+    strcpy(name, newSVG->title);
+    free(newSVG);
+    return name;
+}
+char* getDescWrapper(const char* svgFilename, const char* schemaFile){
+    SVG* newSVG = createValidSVG(svgFilename, schemaFile);
+    char* desc = malloc(sizeof(char)* strlen(newSVG->description) + 1);
+    strcpy(desc, newSVG->description);
+    free(newSVG);
+    return desc;
+}

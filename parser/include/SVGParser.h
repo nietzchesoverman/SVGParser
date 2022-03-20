@@ -397,6 +397,14 @@ char* SVGCreationWrapper(const char* svgFilename, const char* schemaFile);
 
 bool validateSVGWrapper(const char* svgFilename, const char* schemaFile);
 
+//ViewingWrappers
+char* rectViewWrapper(const char* svgFilename, const char* schemaFile);
+char* circViewWrapper(const char* svgFilename, const char* schemaFile);
+char* pathViewWrapper(const char* svgFilename, const char* schemaFile);
+char* grpViewWrapper(const char* svgFilename, const char* schemaFile);
+char* getNameWrapper(const char* svgFilename, const char* schemaFile);
+char* getDescWrapper(const char* svgFilename, const char* schemaFile);
+
 /* ******************************* List helper functions  - MUST be implemented *************************** */
 
 void deleteAttribute( void* data);

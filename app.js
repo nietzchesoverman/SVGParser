@@ -74,7 +74,13 @@ app.get('/uploads/:name', function(req , res){
 //Setup the library
 let svgLib = ffi.Library('./libsvgparser',{
   'SVGCreationWrapper': ['string', ['string', 'string']],
-  'validateSVGWrapper': ['bool', ['string', 'string']]
+  'validateSVGWrapper': ['bool', ['string', 'string']],
+  'rectViewWrapper': ['string',['string', 'string']],
+  'circViewWrapper': ['string',['string', 'string']],
+  'pathViewWrapper': ['string',['string', 'string']],
+  'grpViewWrapper': ['string',['string', 'string']],
+  'getNameWrapper': ['string',['string', 'string']],
+  'getDescWrapper': ['string',['string', 'string']]
 });
 
 //File log event handler on page refresh babyeeee
@@ -131,6 +137,32 @@ app.get('/populateSelector', function(req , res){
   res.send(
     {
       validFiles: fileArray
+    }
+  );
+});
+
+//SVG viewport extravaganza
+app.get('/viewSVG', function(req , res){
+  let svgFiles = fs.readdirSync('./uploads');
+  let svgFilePath = "uploads/"+svgFiles[0];
+  let schema = 'parser/bin/svg.xsd';
+  let title = svgLib.getNameWrapper(svgFilePath, schema);
+  let desc = svgLib.getDescWrapper(svgFilePath, schema);
+  let rects = svgLib.rectViewWrapper(svgFilePath, schema);
+  let circs = svgLib.circViewWrapper(svgFilePath, schema);
+  let paths = svgLib.pathViewWrapper(svgFilePath, schema);
+  let group = svgLib.grpViewWrapper(svgFilePath, schema);
+
+ 
+  res.send(
+    {
+      imagePath: svgFilePath,
+      SVGTitle: title,
+      SVGDesc: desc,
+      SVGRects: rects,
+      SVGCircs: circs,
+      SVGPaths: paths,
+      SVGGrps: group
     }
   );
 });
