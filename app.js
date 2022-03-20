@@ -90,7 +90,8 @@ let svgLib = ffi.Library('./libsvgparser',{
   'changeDesc': ['void',['string', 'string', 'string']],
   'scaleRects': ['bool', ['string', 'string', 'float']],
   'scaleCircs': ['bool', ['string', 'string', 'float']],
-  'setAttributeWrapper': ['bool', ['string', 'string', 'string', 'int', 'string', 'string']]
+  'setAttributeWrapper': ['bool', ['string', 'string', 'string', 'int', 'string', 'string']],
+  'createNewSVGWrapper': ['bool', ['string', 'string', 'string', 'string']]
 });
 
 function extension(fileName){
@@ -306,6 +307,36 @@ app.get('/updateAttr', function(req , res){
   res.send(
     {
       worked: retStr
+    }
+  );
+});
+
+//Create SVG
+app.get('/createNewSVG', function(req , res){
+  let newFileName = req.query.fileName;
+  let schema = 'parser/bin/svg.xsd';
+  let newTitle = req.query.title;
+  let newDesc = req.query.description;
+  let svgFiles = fs.readdirSync('./uploads').filter(extension);
+  let retVal = false;
+
+  if (newFileName.includes(".svg") == false){     //check extension...
+    return retVal;
+  }
+
+  svgFiles.forEach(function(file){
+    if (file.localeCompare(newFileName) == 0){    //check if it already exists...
+      return retVal;
+    }
+  });
+
+  newFileName = "uploads/"+newFileName;
+
+  retVal = svgLib.createNewSVGWrapper(newFileName, schema, newDesc, newTitle);
+ 
+  res.send(
+    {
+      worked: retVal
     }
   );
 });

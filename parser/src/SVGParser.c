@@ -1104,3 +1104,20 @@ bool setAttributeWrapper(const char* svgFilename, const char* schemaFile, const 
     free(newSVG);
     return false;
 }
+bool createNewSVGWrapper(const char* svgFilename, const char* schemaFile, const char* description, const char* title){
+    SVG* newSVG = malloc(sizeof(SVG));
+    strcpy(newSVG->title, title);
+    strcpy(newSVG->description, description);
+    strcpy(newSVG->namespace, "http://www.w3.org/2000/svg");
+    newSVG->rectangles = initializeList(rectangleToString, deleteRectangle, compareRectangles);
+    newSVG->circles = initializeList(circleToString, deleteCircle, compareCircles);
+    newSVG->paths = initializeList(pathToString, deletePath, comparePaths);
+    newSVG->groups = initializeList(groupToString, deleteGroup, compareGroups);
+    newSVG->otherAttributes = initializeList(attributeToString, deleteAttribute, compareAttributes);
+    if(validateSVG(newSVG, schemaFile)){
+        writeSVG(newSVG, svgFilename);
+        free(newSVG);
+        return true;
+    }
+    return false;
+}

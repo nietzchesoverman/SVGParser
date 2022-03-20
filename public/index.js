@@ -344,11 +344,25 @@ jQuery(document).ready(function() {
         let t = $('#createTitleInput').val();
         let d = $('#createDescInput').val();
         let l = $('#createFileInput').val();
-        $('#createTitleInput').val("");
-        $('#createDescInput').val("");
-        $('#createFileInput').val("");
         e.preventDefault();
-        console.log('SVG has been created with '+t+' title, '+d+' description, and '+l+ ' filename');
+        $.ajax({
+            type: 'get',
+            datatype: 'json',
+            url: 'createNewSVG',
+            data: {
+                title: t,
+                description: d,
+                fileName: l
+            },
+            success: function(newSVGCreated){
+                location.reload();
+                console.log('SVG has been created with '+t+' title, '+d+' description, and '+l+ ' filename');
+            },
+            fail: function(err){
+                console.log(err);
+                alert("INVALID SVG - CHECK FILENAME");
+            }
+        });
     });
 
     //Add Shape
