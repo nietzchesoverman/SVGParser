@@ -424,6 +424,10 @@ bool scaleCircs(const char* svgFilename, const char* schemaFile, float scaleFact
 bool setAttributeWrapper(const char* svgFilename, const char* schemaFile, const char* elemntT, int iter, const char* attrName, const char* attrVal);
 bool createNewSVGWrapper(const char* svgFilename, const char* schemaFile, const char* description, const char* title);
 
+//AddShape
+bool addShapeRectWrapper(const char* svgFilename, const char* schemaFile, float x, float y, float width, float height, const char* unit);
+bool addShapeCircWrapper(const char* svgFilename, const char* schemaFile, float cx, float cy, float r, const char* unit);
+
 /* ******************************* List helper functions  - MUST be implemented *************************** */
 
 void deleteAttribute( void* data);

@@ -82,9 +82,11 @@ jQuery(document).ready(function() {
                 }else{
                     $('#fileDropDown').innerHTML = "";
                 }
+                $('#addShapeSVGSelect').empty();
                 let optionIterator = 0;
                 svgFiles.validFiles.forEach(function(file){
                     $('#fileDropDown').append("<option value=\""+optionIterator+"\">"+file+"</option>");
+                    $('#addShapeSVGSelect   ').append("<option value=\""+optionIterator+"\">"+file+"</option>");
                     optionIterator = optionIterator + 1;
                 });
                 console.log('selector value updated');
@@ -365,19 +367,57 @@ jQuery(document).ready(function() {
         });
     });
 
+    //Switch Between Shapes
+    $('#shapeAddSelect').on('change', function(e){
+        if ($('#shapeAddSelect').find("option:selected").text() == "Rectangles"){
+            $('#addShapeHead').empty();
+            $('#addShapeHead').append("<th>x</th><th>y</th><th>width</th><th>height</th><th>units</th>");
+            $('#addShapeBody').empty();
+            $('#addShapeBody').append("<td><input id=\"x\" type=\"text\" maxlength=\"256\" class=\"smallTextField\" value=\"\"></td><td><input id=\"y\" type=\"text\" maxlength=\"256\" class=\"smallTextField\" value=\"\"></td><td><input id=\"width\" type=\"text\" maxlength=\"256\" class=\"smallTextField\" value=\"\"></td><td><input id=\"height\" type=\"text\" maxlength=\"256\" class=\"smallTextField\" value=\"\"></td><td><input id=\"units\" type=\"text\" maxlength=\"256\" class=\"smallTextField\" value=\"\"></td>");
+        }else{
+            $('#addShapeHead').empty();
+            $('#addShapeHead').append("<th>cx</th><th>cy</th><th>r</th><th>units</th>");
+            $('#addShapeBody').empty();
+            $('#addShapeBody').append("<td><input id=\"cx\" type=\"text\" maxlength=\"256\" class=\"smallTextField\" value=\"\"></td><td><input id=\"cy\" type=\"text\" maxlength=\"256\" class=\"smallTextField\" value=\"\"></td><td><input id=\"r\" type=\"text\" maxlength=\"256\" class=\"smallTextField\" value=\"\"></td><td><input id=\"units\" type=\"text\" maxlength=\"256\" class=\"smallTextField\" value=\"\"></td>");
+        }
+    });
+
     //Add Shape
     $('#scaleAddSubmit').submit(function(e){
-        let x = $('#x').val();
-        let y = $('#y').val();
-        let w = $('#width').val();
-        let h = $('#height').val();
-        let u = $('#units').val();
-        $('#x').val("");
-        $('#y').val("");
-        $('#width').val("");
-        $('#height').val("");
-        $('#units').val("");
+        let sendServer = ""
+        if ($('#shapeAddSelect').find("option:selected").text() == "Rectangles"){
+            let x = $('#x').val();
+            let y = $('#y').val();
+            let w = $('#width').val();
+            let h = $('#height').val();
+            let u = $('#units').val();
+            sendServer = "{\"x\":"+x+",\"y\":"+y+",\"width\":"+w+",\"height\":"+h+",\"unit\":\""+u+"\"}";
+        }else{
+            let x = $('#cx').val();
+            let y = $('#cy').val();
+            let r = $('#r').val();
+            let u = $('#units').val();
+            sendServer = "{\"cx\":"+x+",\"cy\":"+y+",\"r\":"+r+",\"unit\":\""+u+"\"}";
+        }
         e.preventDefault();
+        $.ajax({
+            type: 'get',
+            datatype: 'json',
+            url: 'addShape',
+            data: {
+                svgPath: 'uploads/'+$('#addShapeSVGSelect').find("option:selected").text(),
+                shape: $('#shapeAddSelect').find("option:selected").text(),
+                shapeInfo: sendServer
+            },
+            success: function(passed){
+                location.reload();
+                console.log("shape added!");
+            },
+            fail: function(err){
+                alert("INVALID SHAPE");
+                console.log(err);
+            }
+        });
         console.log('Item created with x:'+x+', y:'+y+', w:'+w+', h:'+h+', unit:'+u);
     });
         

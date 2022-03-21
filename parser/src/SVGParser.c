@@ -1121,3 +1121,36 @@ bool createNewSVGWrapper(const char* svgFilename, const char* schemaFile, const 
     }
     return false;
 }
+bool addShapeRectWrapper(const char* svgFilename, const char* schemaFile, float x, float y, float width, float height, const char* unit){
+    SVG* newSVG = createValidSVG(svgFilename, schemaFile);
+    Rectangle* newRect= malloc(sizeof(Rectangle));
+    newRect->x = x;
+    newRect->y = y;
+    newRect->width = width;
+    newRect->height = height;
+    strcpy(newRect->units, unit);
+    newRect->otherAttributes = initializeList(attributeToString, deleteAttribute, compareAttributes);
+    addComponent(newSVG, RECT, (void*)newRect);
+    if (validateSVG(newSVG, schemaFile)){
+        writeSVG(newSVG, svgFilename);
+        free(newSVG);
+        return true;
+    }
+    return false;
+}
+bool addShapeCircWrapper(const char* svgFilename, const char* schemaFile, float cx, float cy, float r, const char* unit){
+    SVG* newSVG = createValidSVG(svgFilename, schemaFile);
+    Circle* newCirc= malloc(sizeof(Circle));
+    newCirc->cx = cx;
+    newCirc->cy = cy;
+    newCirc->r = r;
+    strcpy(newCirc->units, unit);
+    newCirc->otherAttributes = initializeList(attributeToString, deleteAttribute, compareAttributes);
+    addComponent(newSVG, CIRC, (void*)newCirc);
+    if (validateSVG(newSVG, schemaFile)){
+        writeSVG(newSVG, svgFilename);
+        free(newSVG);
+        return true;
+    }
+    return false;
+}

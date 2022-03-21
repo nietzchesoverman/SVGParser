@@ -91,7 +91,9 @@ let svgLib = ffi.Library('./libsvgparser',{
   'scaleRects': ['bool', ['string', 'string', 'float']],
   'scaleCircs': ['bool', ['string', 'string', 'float']],
   'setAttributeWrapper': ['bool', ['string', 'string', 'string', 'int', 'string', 'string']],
-  'createNewSVGWrapper': ['bool', ['string', 'string', 'string', 'string']]
+  'createNewSVGWrapper': ['bool', ['string', 'string', 'string', 'string']],
+  'addShapeRectWrapper': ['bool', ['string', 'string', 'float', 'float', 'float', 'float', 'string' ]],
+  'addShapeCircWrapper': ['bool', ['string', 'string', 'float', 'float', 'float', 'string' ]]
 });
 
 function extension(fileName){
@@ -333,6 +335,27 @@ app.get('/createNewSVG', function(req , res){
   newFileName = "uploads/"+newFileName;
 
   retVal = svgLib.createNewSVGWrapper(newFileName, schema, newDesc, newTitle);
+ 
+  res.send(
+    {
+      worked: retVal
+    }
+  );
+});
+
+//Add shape
+app.get('/addShape', function(req , res){
+  let path = req.query.svgPath;
+  let shapeType = req.query.shape;
+  let schema = 'parser/bin/svg.xsd';
+  let shapeJson = JSON.parse(req.query.shapeInfo);
+  let retVal = false;
+  
+  if (shapeType.localeCompare("Rectangles") == 0){
+    retVal = svgLib.addShapeRectWrapper(path, schema, parseFloat(shapeJson.x), parseFloat(shapeJson.y),parseFloat(shapeJson.width),parseFloat(shapeJson.height),shapeJson.unit);
+  }else{
+    retVal = svgLib.addShapeCircWrapper(path, schema, parseFloat(shapeJson.cx),parseFloat(shapeJson.cy),parseFloat(shapeJson.r),shapeJson.unit);
+  }
  
   res.send(
     {
